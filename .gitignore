@@ -1,0 +1,14 @@
+# ignore everything but folders
+*
+!*/
+
+# unignore
+!*.c
+!*.h
+!*.ipynb
+
+!/data/data_visualizations.ipynb
+
+!.gitignore
+!.makefile
+!README
