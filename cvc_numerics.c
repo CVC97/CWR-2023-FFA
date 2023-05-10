@@ -1,0 +1,320 @@
+#include <math.h>
+#include <time.h>
+#include <gsl/gsl_rng.h>
+
+
+// Struktur eines 2er Tupels
+struct tuple_2 {
+    double x1;
+    double x2;
+};
+
+
+// Typ gewöhnliche DGL
+typedef int ode_func(double, const double[], double[], void*);
+
+
+// e^(-y^2)
+static double e_y2(double y) {
+    return 2 * exp(-pow(y, 2)) / sqrt(M_PI);
+}
+
+
+// Potenz für natürliche Zahlen x^n
+double npow(double x, int n) {
+    double prod = x;
+    for (int i = 1; i < n; i++) {
+        prod *= x;
+    }
+    return prod;
+}
+
+
+// Norm in 2 dimensions
+double norm_2D(double x, double y) {
+    return sqrt(npow(x, 2) + npow(y, 2));
+}
+
+
+// numerische Integration (Trapez)
+double integrate_trapez(double left, double right, int N, double integrand(double)) {
+    double sum = 0, interval = (right - left) / N;
+    for (int i = 0; i < N; i++) {
+        sum += (integrand(left + i*interval) + integrand(left + (i+1)*interval)) * interval / 2;
+    }
+    return sum;
+}
+
+
+// numerische Integration: Simpsonregel
+double integrate_simpson(double func(double), double x, int N) {
+    double delta_x = x / N, sum = 0, x_i, m_i, x_ii;
+    for (int i = 0; i < N; i++) {
+        x_i = delta_x * i;
+        m_i = delta_x * (i+0.5);
+        x_ii = delta_x * (i+1);
+        sum += (func(x_i) + 4*func(m_i) + func(x_ii)) * delta_x / 6;
+    }
+    return sum;
+}
+
+
+// numerische Integration: Simpsonregel mit Funktion func für Integralgrenzen (left, right), Schrittweite dx und Parameter *params
+double integrate_simpson_2_param(double left, double right, double dx, double func(double, void*), void *params) {
+    double x_i = left, m_i, x_ii, sum = 0;
+    while (x_i < right) {
+        m_i = x_i + 0.5*dx;
+        x_ii = x_i + dx;
+        sum += (func(x_i, params) + 4*func(m_i, params) + func(x_ii, params)) * dx / 6;
+        x_i += dx;
+    }
+    return sum;
+}
+
+
+// numerische Integration Fehlerfunktion: Mittelpunktsregel
+double erf_midpoint(double x, double delta_x) {
+    int N = fabs(x) / delta_x;
+    double sum = 0, d_x = x / N;
+    for (int i = 0; i < N; i++) {
+        sum += e_y2( (i+0.5)*d_x ) * d_x;
+    }
+    return sum;
+}
+
+
+// numerische Integration Fehlerfunktion: Simpsonregel
+double erf_simpson(double x, double delta_x) {
+    int N = fabs(x) / delta_x;
+    double sum = 0, d_x = x / N, x_i, m_i, x_ii;
+    for (int i = 0; i < N; i++) {
+        x_i = d_x * i;
+        m_i = d_x * (i+0.5);
+        x_ii = d_x * (i+1);
+        sum += ( e_y2(x_i) + 4*e_y2(m_i) + e_y2(x_ii) ) * d_x / 6;
+    }
+    return sum;
+}
+
+
+// numerische Differenzierung: zentrale Differenz
+double diff(double x, double delta, double func(double)) {
+    return ( func(x + delta) - func(x - delta) ) / ( 2 * delta);
+}
+
+
+// Nullstellensuche: Bisektion
+double find_root_bisection(double func(double), double a, double b, double epsilon, int max_iter) {
+    double x_mid, f_x_mid, f_a, f_b;
+    int i = 0;
+    while (i++ < max_iter) {
+        x_mid = (a + b) / 2;
+        f_x_mid = func(x_mid);
+        f_a = func(a);
+        f_b = func(b);
+        if (f_x_mid * f_b < 0) {
+            a = x_mid;
+        } else if (f_x_mid * f_a < 0) {
+            b = x_mid;
+        }
+        if (f_a < epsilon && f_b < epsilon) {
+            break;
+        }
+    }
+    return x_mid;
+}
+
+
+// numerische Nullstellensuche: Newton-Raphson
+double find_root_newton_raphson(double func(double), double x0, double delta, double rel_tol, int max_iter) {
+    int i = 0;
+    double x_old;
+    while (i++ < max_iter) {
+        x_old = x0;
+        x0 -= func(x0) / diff(x0, delta, func);
+        if (fabs(x_old - x0) / fabs(x0) < rel_tol) {
+            break;
+        }
+    }
+    return x0;
+}
+
+
+// kombinierte Lösungsmethode quadratischer Gleichungen
+struct tuple_2 solve_quadratic(double a, double b, double c) {
+    double sol1, sol2;
+    if (b > 0) {
+        sol1 = (2*c) / (-b - sqrt(pow(b, 2) - 4*a*c));
+        sol2 = (-b - sqrt(pow(b, 2) - 4*a*c)) / (2*a);
+    } else {
+        sol1 = (-b + sqrt(pow(b, 2) - 4*a*c)) / (2*a);
+        sol2 = (2*c) / (-b + sqrt(pow(b, 2) - 4*a*c));
+    }
+    struct tuple_2 quadratic_solution;
+    quadratic_solution.x1 = sol1;
+    quadratic_solution.x2 = sol2;
+    return quadratic_solution;
+}
+
+
+// Tupel aus 2 normalverteile Zuvallsgrößen für gegebenen (GSL_RNG) Zufallsgenerator: Polarmethode
+struct tuple_2 random_gaussian(void) {
+    static gsl_rng* generator = NULL;                           // Seed with time applied to given generator
+    if (generator == NULL) {
+        generator = gsl_rng_alloc(gsl_rng_taus2);
+        gsl_rng_set(generator, time(NULL));  
+    }    
+    double u, v, r = 0, m;                                      // Erstelung 2 Zufallszahlen u, v
+    while (r > 1 || r == 0){
+        u = (gsl_rng_uniform(generator) * 2) - 1;
+        v = (gsl_rng_uniform(generator) * 2) - 1;
+        r = pow(u, 2) + pow(v, 2);
+    }
+    m = sqrt(-2*log(r)/r);
+    struct tuple_2 random_2;                                    // Tupel mit 2 normalverteilten Zufallszahlen
+    random_2.x1 = u*m;
+    random_2.x2 = v*m;
+    return random_2;
+}  
+
+
+// MC-Berechnung der Dichte im Hyperquader [ai, bi] mit dim Dimensionen für die Dichtefunktion func()  
+double mc_integrate(double func(double*, int), double a[], double b[], int dim, int N) {
+    static gsl_rng* generator = NULL;                           // Initialisierung statischer Generator
+    if (generator == NULL) {
+        generator = gsl_rng_alloc(gsl_rng_taus2);
+        gsl_rng_set(generator, time(NULL));  
+    }  
+    double V = 1, *y, density_sum = 0;                          // Gesamtvolumen
+    for (int i_dim = 0; i_dim < dim; i_dim++) {
+        V *= b[i_dim] - a[i_dim];
+    }
+    y = (double*) malloc(sizeof(double) * dim);                 // Erstellung N Zufallsvektoren y[]
+    for (int i = 0; i < N; i++) {
+        for (int i_dim = 0; i_dim < dim; i_dim++) {
+            *(y + i_dim) = gsl_rng_uniform(generator) * (b[i_dim] - a[i_dim]) + a[i_dim];
+        }
+        density_sum += func(y, dim);
+    }
+    free(y);
+    return V / N * density_sum;
+}
+
+
+// 2-Dimensionale Integration: Mittelpunktsregel
+double integrate_midpoint_2D(int A(double, double), double a_x, double b_x, double a_y, double b_y, double delta_x, double f(double, double)) {
+    int N_x = (b_x - a_x) / delta_x;
+    int N_y = (b_y - a_y) / delta_x;
+    double x, y, sum = 0;
+    for (int i_x = 0; i_x < N_x; i_x++) {
+        for (int i_y = 0; i_y < N_y; i_y++) {
+            x = a_x + (i_x + 0.5) * delta_x;
+            y = a_y + (i_y + 0.5) * delta_x;
+            sum += f(x, y) * A(x, y);
+        }
+    }
+    return pow(delta_x, 2) * sum;
+}
+
+
+// 2-Dimensionale Integration: MC
+double mc_integrate_2D(int A(double, double), double a_x, double b_x, double a_y, double b_y, int N, double f(double, double)) {
+    static gsl_rng* generator = NULL;
+    if (generator == NULL) {
+        generator = gsl_rng_alloc(gsl_rng_taus2);
+        gsl_rng_set(generator, time(NULL));  
+    } 
+    double x, y, sum = 0, R_area = (b_x - a_x) * (b_y - a_y);
+    for (int i = 0; i < N; i++) {
+        x = gsl_rng_uniform(generator) * (b_x - a_x) + a_x;
+        y = gsl_rng_uniform(generator) * (b_y - a_y) + a_y;
+        sum += f(x, y) * A(x, y);
+    }
+    return R_area * sum / N;
+}
+
+
+// numerische Euler Integration des Zustandsarrays y mit gegebenen Parametern
+void euler_step(double t, double delta_t, double y[], ode_func func, int dimension, void *params) {
+    double *f;
+    f = (double*) malloc(sizeof(double) * dimension);           // Reservierung des Ableitungsarrays
+    func(t, y, f, params);                                      // Füllen des Ableitungsarrays über Aufruf der entprechenden ODE
+    for (int i = 0; i < dimension; i++) {
+        y[i] += f[i] * delta_t;
+    }
+    free(f);                                                    // Freigeben des Ableitungsarrays
+    return;
+}
+
+
+// numerische Integration mittels Runge-Kutta 2. Ordnung des Zustandsarrays y mit gegebenen Parametern
+void rk2_step(double t, double delta_t, double y[], ode_func func, int dimension, void *params) {
+    double *support, *k1, *k2;
+    support = (double*) malloc(sizeof(double) * dimension);
+    k1 = (double*) malloc(sizeof(double) * dimension);
+    k2 = (double*) malloc(sizeof(double) * dimension);
+    func(t, y, k1, params);                                     // Berechnung k1 = f(t, y)
+    for (int i = 0; i < dimension; i++) {
+        k1[i] *= delta_t;                                       // Berücksichtigung des Zeitschritts: k1 = f(t, y) * dt
+        support[i] = y[i] + k1[i] / 2;                          // support = y + k1/2 (für nächsten Schritt)
+    }
+    func(t+delta_t/2, support, k2, params);                     // Berechnung k2 = f(t+dt/2, y+k1/2) und y_(i+1)
+    for (int i = 0; i < dimension; i++) {
+        k2[i] *= delta_t;
+        y[i] += k2[i];
+    }
+    free(support), free(k1), free(k2);
+    return;
+}
+
+
+// numerische Integration mittels Runge-Kutta 2. Ordnung des Zustandsarrays y mit gegebenen Parametern
+void rk4_step(double t, double delta_t, double y[], ode_func func, int dimension, void *params) {
+    double *support, *k1, *k2, *k3, *k4;
+    support = (double*) malloc(sizeof(double) * dimension);
+    k1 = (double*) malloc(sizeof(double) * dimension);
+    k2 = (double*) malloc(sizeof(double) * dimension);
+    k3 = (double*) malloc(sizeof(double) * dimension);
+    k4 = (double*) malloc(sizeof(double) * dimension);
+    func(t, y, k1, NULL);                                       // Berechnung k1 = f(t, y) * dt und support = y + k1/2
+    for (int i = 0; i < dimension; i++) {
+        k1[i] *= delta_t;
+        support[i] = y[i] + k1[i] / 2;
+    }
+    func(t+delta_t/2, support, k2, params);                     // Berechnung k2 = f(t+dt/2, y+k1/2) * dt und support = y + k2/2
+    for (int i = 0; i < dimension; i++) {
+        k2[i] *= delta_t;
+        support[i] = y[i] + k2[i] / 2;
+    }
+    func(t+delta_t/2, support, k3, params);                     // Berechnung k3 = f(t+dt/2, y+k2/2) * dt und support = y + k3
+    for (int i = 0; i < dimension; i++) {
+        k3[i] *= delta_t;
+        support[i] = y[i] + k3[i];
+    }
+    func(t+delta_t, support, k4, params);                       // Berechnung k4 = f(t+dt, y+k2) * dt und y_(i+1)
+    for (int i = 0; i < dimension; i++) {
+        k4[i] *= delta_t;
+        y[i] += (k1[i] + 2*k2[i] + 2*k3[i] + k4[i]) / 6; 
+    }
+    free(support), free(k1), free(k2), free(k3), free(k4);
+    return;   
+}
+
+
+// numerische Integration
+void verlet_step(double t, double delta_t, double y[], ode_func func, int dimension, void *params) {
+    int N = dimension / 2;
+    double *a1, *a2;
+    a1 = (double*) malloc(sizeof(double) * dimension);
+    a2 = (double*) malloc(sizeof(double) * dimension);
+    func(t, y, a1, params);                                     // Berechnung von a1 = f(t, y) * dt
+    for (int i = 0; i < N; i++) {                               // Berechnung (erster Hälfte, Positionen) von y_(i+1) aus a1
+        y[i] += a1[i] * delta_t + a1[i+N] * (delta_t * delta_t) /2;
+    }
+    func(t+delta_t, y, a2, params);                               // Berechnung von a2 = f(t+delta_t, y_(i+1)) aus Positionen von y_(i+1)
+    for (int i = 0; i < N; i++) {                               // Berechnung (zweite Hälfte, Geschwindigkeiten) von y_(i+1) aus a1 und a2
+        y[i+N] += (a1[i+N] + a2[i+N]) * delta_t / 2;
+    }                                                                                                                 
+    free(a1), free(a2);
+    return;
+}
