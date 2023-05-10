@@ -83,8 +83,8 @@ int main(void) {
     y[N] = 20;
 
     // Ausgabe-Dateien
-    FILE* pos_file = fopen("data/A17_Euler_Integration.csv", "w");
-    FILE* energy_file = fopen("data/A17_Euler_Integration_Energie.csv", "w");
+    FILE* pos_file = fopen("data/A13_Euler_Integration.csv", "w");
+    FILE* energy_file = fopen("data/A13_Euler_Integration_Energie.csv", "w");
     fprintf(pos_file, "Zeit t");
     fprintf(energy_file, "Teit t, Energie E\n");
     for (int i = 1; i <= N; i++) {

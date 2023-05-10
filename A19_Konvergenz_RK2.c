@@ -27,14 +27,6 @@ int main(void) {
     double x_T4 = v_0 * sqrt(mass / k);
     double T4 = T/4;
 
-    // Zustandsarray
-    double y_rk2[2] = {0, v_0};
-    double y_rk4[2] = {0, v_0};
-    double y_euler[2] = {0, v_0};
-    double y_verlet[2] = {0, v_0};
-
-    printf("x_T4: %g, T4: %g\n", x_T4, T4);
-
     // Erstellen der Residuendatei
     FILE* res_file = fopen("data/A19_Konvergenz_RK2.csv", "w");
     fprintf(res_file, "Zeitschritt delta_t, Residuum RK2, , Residuum RK4, Residuum Euler, Residuum Verlet\n");
@@ -45,6 +37,12 @@ int main(void) {
         t = 0;                                                          // Starten der jeweiligen Integration bei t = 0
         exp = -1 - i * (7.0/99);                                        // Anpassen des Exponentens des Schrittweite
         d_t = pow(10, exp);                                             // neue Schrittweite aus Exponent
+
+        // Reinitialisierung Zustandsarray
+        double y_rk2[2] = {0, v_0};
+        double y_rk4[2] = {0, v_0};
+        double y_euler[2] = {0, v_0};
+        double y_verlet[2] = {0, v_0};
 
         // Numerische Integration bis vorletztem Integrationsschritt
         while (t + d_t < T4) {
@@ -64,7 +62,6 @@ int main(void) {
 
         // Berechnung und Ausgabe des "Residuums"         
         residue_RK2 = fabs(y_rk2[0] - x_T4);
-        printf("Resi_RK2: %g\n", fabs(y_rk2[0] - x_T4));
         residue_RK4 = fabs(y_rk4[0] - x_T4);
         residue_Euler = fabs(y_euler[0] - x_T4);
         residue_verlet = fabs(y_verlet[0] - x_T4);

@@ -19,7 +19,7 @@ double find_root_newt_raph(double func(double, double), double t, double x0, dou
     int i = 0;
     double x_old;
 
-    FILE* file_root_newt_raph = fopen("data/A07_Nullstelle_Newton_Raphson.csv", "w");
+    FILE* file_root_newt_raph = fopen("data/old_A07_Nullstelle_Newton_Raphson.csv", "w");
     fprintf(file_root_newt_raph, "Itierungsschritt, abs(x_(n+1) - x_n)\n");
     while (i++ < max_iter) {
         printf("i: %d, max_iter: %d\n", i, max_iter);
@@ -57,7 +57,7 @@ double find_root_bisection(double func(double, double), double a, double b, doub
     double x_mid, f_x_mid, f_a, f_b, x_mid_old;
     int i = 0;
 
-    FILE* file_root_bisection = fopen("data/A07_Nullstelle_Bisektion.csv", "w");
+    FILE* file_root_bisection = fopen("data/old_A07_Nullstelle_Bisektion.csv", "w");
     fprintf(file_root_bisection, "Itierungsschritt, abs(x_(n+1) - x_n)\n");
     while (i++ < max_iter) {
         x_mid_old = x_mid;
@@ -91,7 +91,7 @@ int main(void) {
     printf("Nullstelle (Bisektion): %.6f\n", root_bisection);
     
     // Abhängigkeit der Nullstelle von t (Newton-Raphson, t in [0, 1.2])
-    FILE* file_root_t_newt_raph_t = fopen("data/A07_Nullstelle_t_Newton_Raphson.csv", "w");
+    FILE* file_root_t_newt_raph_t = fopen("data/old_A07_Nullstelle_t_Newton_Raphson.csv", "w");
     fprintf(file_root_t_newt_raph_t, "t, Nullstelle\n");
     for (double t = 0; t <= 1.2; t += 0.01) {
         root_t_newt_raph = find_root_newt_raph_t(f, t, 1, 0.1, 0.00001, 100);

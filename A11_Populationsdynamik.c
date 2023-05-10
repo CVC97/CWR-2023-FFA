@@ -59,16 +59,15 @@ int main(void) {
 
 
     // Stabilitätsanalyse Populationsgröße nach 1000 Integrationsschritten abhängig von my
-    double x_1000 = n_0;
     double mu = 0.4;
 
     // Ausgabe-Dateiein x_1000(mu)
     FILE* x1000_file = fopen("data/A11_Populationsdynamik_mu.csv", "w");
     fprintf(x1000_file, "mu, x_1000\n");
     while (mu < 1) {
+        double x_1000 = n_0;
         for (int i = 0; i < 1000; i++) {
             x_1000 = x_i1(mu, x_1000);
-            //printf("%g\n", x_1000);
         }
         fprintf(x1000_file, "%g, %g\n", mu, x_1000);
         mu += 0.01;

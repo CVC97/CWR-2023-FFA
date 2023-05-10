@@ -100,11 +100,11 @@ A11_Populationsdynamik: A11_Populationsdynamik.c
 
 # A12
 A12_pendulums: A12_pendulums.o cvc_numerics.o
-	gcc A16_pendulums.o cvc_numerics.o -o A12_pendulums $(FLAGS)
+	gcc A12_pendulums.o cvc_numerics.o -o A12_pendulums $(FLAGS)
 	rm *.o
 
 A12_pendulums.o: A12_pendulums.c
-	gcc -c A16_pendulums.c
+	gcc -c A12_pendulums.c
 
 cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
@@ -184,12 +184,18 @@ cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
 
+# (old) A07
+old_A07_Nullstellensuche: old_A07_Nullstellensuche.c
+	gcc old_A07_Nullstellensuche.c -o old_A07_Nullstellensuche $(FLAGS)
+	rm *.o
+
+
 # (old) A12
 old_A12_Polarmethode_normalverteilter_Zufallszahlen: old_A12_Polarmethode_normalverteilter_Zufallszahlen.c
 	gcc old_A12_Polarmethode_normalverteilter_Zufallszahlen.c -o old_A12_Polarmethode_normalverteilter_Zufallszahlen $(FLAGS)
 
 
-# A13
+# (old) A13
 old_A13_Histogramme: old_A13_Histogramme.o cvc_numerics.o
 	gcc old_A13_Histogramme.o cvc_numerics.o -o old_A13_Histogramme $(FLAGS)
 	rm *.o
@@ -201,7 +207,7 @@ cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
 
-# A14
+# (old) A14
 old_A14_Monte_Carlo_Integration: old_A14_Monte_Carlo_Integration.o cvc_numerics.o
 	gcc A14_Monte_Carlo_Integration.o cvc_numerics.o -o old_A14_Monte_Carlo_Integration $(FLAGS)
 	rm *.o
@@ -213,7 +219,7 @@ cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
 
-# old_A20
+# (old) A20
 old_A20_Reibung: old_A20_Reibung.o cvc_numerics.o
 	gcc old_A20_Reibung.o cvc_numerics.o -o old_A20_Reibung $(FLAGS)
 	rm *.o
@@ -232,6 +238,6 @@ o_delete:
 
 # Update die Numerik-Bibliotheken im submissions-Folder
 update_numerics:
-	cp cvc_numerics.c submissions/cvc_numerics.c
-	cp cvc_numerics.h submissions/cvc_numerics.h
+	cp cvc_numerics.c ../submissions/cvc_numerics.c
+	cp cvc_numerics.h ../submissions/cvc_numerics.h
 

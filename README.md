@@ -8,16 +8,15 @@ CWR-Repository von Carlo von Carnap, SoSe 2023. Sämtliche Aufgaben und die Nume
 - ``cvc_numerics.c``
 - ``AXX_Exercise_Name.c``
 
-Im Ordner ``/data`` ist das **Jupyter-Notebook** ``data_visualizations.ipynb`` das den Code sämtlicher graphische Auswertungen enthält und diese im Ordner ``/data/visualizations`` speichert. 
+Im Ordner ``/data`` ist das **Jupyter-Notebook** ``data_visualizations.ipynb``, das den Code sämtlicher graphischer Auswertungen enthält und diese im Ordner ``/data/visualizations`` speichert. 
 
 
 ## Kompilieren und Ausführen der Abgabedateien
 
 Kompilieren funktioniert über die makefile:
 
-- Kompilieren: ``make``
-- Ausführen: ``make run``
-- Säubern des Ordners: ``make clean``
+- Kompilieren: ``make AXX_Exercise_Name``
+- Ausführen: ``./AXX_Exercise_Name``
 
 
 **(Download und Anzeige der README.md auf eigene Gefahr.)**
