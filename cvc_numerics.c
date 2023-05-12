@@ -12,6 +12,7 @@ struct tuple_2 {
 
 // Typ gewöhnliche DGL
 typedef int ode_func(double, const double[], double[], void*);
+typedef int sde_func(double, const double[], double[], double, void*);
 
 
 // e^(-y^2)
@@ -237,7 +238,7 @@ double mc_integrate_2D(int A(double, double), double a_x, double b_x, double a_y
 // numerische Euler Integration des Zustandsarrays y mit gegebenen Parametern
 void euler_step(double t, double delta_t, double y[], ode_func func, int dimension, void *params) {
     double *f;
-    f = (double*) malloc(sizeof(double) * dimension);           // Reservierung des Ableitungsarrays
+    f = (double*) calloc(dimension, sizeof(double));           // Reservierung des Ableitungsarrays
     func(t, y, f, params);                                      // Füllen des Ableitungsarrays über Aufruf der entprechenden ODE
     for (int i = 0; i < dimension; i++) {
         y[i] += f[i] * delta_t;
@@ -250,9 +251,9 @@ void euler_step(double t, double delta_t, double y[], ode_func func, int dimensi
 // numerische Integration mittels Runge-Kutta 2. Ordnung des Zustandsarrays y mit gegebenen Parametern
 void rk2_step(double t, double delta_t, double y[], ode_func func, int dimension, void *params) {
     double *support, *k1, *k2;
-    support = (double*) malloc(sizeof(double) * dimension);
-    k1 = (double*) malloc(sizeof(double) * dimension);
-    k2 = (double*) malloc(sizeof(double) * dimension);
+    support = (double*) calloc(dimension, sizeof(double));
+    k1 = (double*) calloc(dimension, sizeof(double));
+    k2 = (double*) calloc(dimension, sizeof(double));
     func(t, y, k1, params);                                     // Berechnung k1 = f(t, y)
     for (int i = 0; i < dimension; i++) {
         k1[i] *= delta_t;                                       // Berücksichtigung des Zeitschritts: k1 = f(t, y) * dt
@@ -272,10 +273,10 @@ void rk2_step(double t, double delta_t, double y[], ode_func func, int dimension
 void rk4_step(double t, double delta_t, double y[], ode_func func, int dimension, void *params) {
     double *support, *k1, *k2, *k3, *k4;
     support = (double*) malloc(sizeof(double) * dimension);
-    k1 = (double*) malloc(sizeof(double) * dimension);
-    k2 = (double*) malloc(sizeof(double) * dimension);
-    k3 = (double*) malloc(sizeof(double) * dimension);
-    k4 = (double*) malloc(sizeof(double) * dimension);
+    k1 = (double*) calloc(dimension, sizeof(double));
+    k2 = (double*) calloc(dimension, sizeof(double));
+    k3 = (double*) calloc(dimension, sizeof(double));
+    k4 = (double*) calloc(dimension, sizeof(double));
     func(t, y, k1, NULL);                                       // Berechnung k1 = f(t, y) * dt und support = y + k1/2
     for (int i = 0; i < dimension; i++) {
         k1[i] *= delta_t;
@@ -305,8 +306,8 @@ void rk4_step(double t, double delta_t, double y[], ode_func func, int dimension
 void verlet_step(double t, double delta_t, double y[], ode_func func, int dimension, void *params) {
     int N = dimension / 2;
     double *a1, *a2;
-    a1 = (double*) malloc(sizeof(double) * dimension);
-    a2 = (double*) malloc(sizeof(double) * dimension);
+    a1 = (double*) calloc(dimension, sizeof(double));
+    a2 = (double*) calloc(dimension, sizeof(double));
     func(t, y, a1, params);                                     // Berechnung von a1 = f(t, y) * dt
     for (int i = 0; i < N; i++) {                               // Berechnung (erster Hälfte, Positionen) von y_(i+1) aus a1
         y[i] += a1[i] * delta_t + a1[i+N] * (delta_t * delta_t) /2;

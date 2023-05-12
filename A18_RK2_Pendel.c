@@ -22,11 +22,6 @@ const double delta_t = 1e-3; // Zeitliche Schrittweite
 
 // Lösen der ODE
 int pendumlumsODE(double t, const double y[], double f[], void *params) {
-    // Ableitungs-Array mit Nullen füllen
-    for (int i = 0; i < 2*N; i++) {
-        f[i] = 0;
-    }
-
     // Geschwindigkeiten aus dem Zustandsarray übertragen
     for (int i = 0; i < N; i++) {                   
         f[i] = y[N+i];
@@ -70,7 +65,7 @@ double pendulums_energy(const double y[]) {
 // Kopierte main von A16
 int main(void) {
     int dimension = 2*N;
-    double t = 0;
+    double t = 0, energy;
 
     // Erstellen des Zustandsarrays mit den Startwerten
     double y[dimension], y_rk4[dimension];
@@ -89,8 +84,10 @@ int main(void) {
     // Ausgabe-Dateien
     FILE* pos_file = fopen("data/A18_RK2_Integration.csv", "w");
     FILE* pos_file_rk4 = fopen("data/A18_RK4_Integration.csv", "w");
+    FILE* energy_file = fopen("data/A18_RK2_Integration_Energie.csv", "w");
     fprintf(pos_file, "Zeit t");
     fprintf(pos_file_rk4, "Zeit t");
+    fprintf(energy_file, "Teit t, Energie E\n");
     for (int i = 1; i <= N; i++) {
         fprintf(pos_file, ", P%d", i);
         fprintf(pos_file_rk4, ", P%d", i);
@@ -101,8 +98,9 @@ int main(void) {
 
     // Durchlaufen der Zeitschritte
     while (t < T_max) {
-        rk2_step(t, delta_t, y, pendumlumsODE, dimension, NULL);      // Aufruf der Integrationsfunktion
+        rk2_step(t, delta_t, y, pendumlumsODE, dimension, NULL);        // Aufruf der Integrationsfunktion
         rk4_step(t, delta_t, y_rk4, pendumlumsODE, dimension, NULL);
+        energy = pendulums_energy( (const double*) y);                  // Berechnung der GEsamtenergie des Systems
         t += delta_t;
 
         // Beschreiben des Datenfiles
@@ -114,9 +112,8 @@ int main(void) {
         }
         fprintf(pos_file, "\n"); 
         fprintf(pos_file_rk4, "\n"); 
+        fprintf(energy_file, "%g, %g\n", t, energy);
     }
-
-    fclose(pos_file);
-    fclose(pos_file_rk4);
+    fclose(pos_file), fclose(pos_file_rk4), fclose(energy_file);
     return 0;
 }

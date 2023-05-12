@@ -22,11 +22,6 @@ const double delta_t = 1e-3; // Zeitliche Schrittweite
 
 // Lösen der ODE
 int pendumlumsODE(double t, const double y[], double f[], void *params) {
-    // Ableitungs-Array mit Nullen füllen
-    for (int i = 0; i < 2*N; i++) {
-        f[i] = 0;
-    }
-
     // Geschwindigkeiten aus dem Zustandsarray übertragen
     for (int i = 0; i < N; i++) {                   
         f[i] = y[N+i];
@@ -96,6 +91,7 @@ int main(void) {
     while (t < T_max) {
         euler_step(t, delta_t, y, pendumlumsODE, dimension, NULL);      // Aufruf der Integrationsfunktion
         energy = pendulums_energy( (const double*) y);                  // Berechnung der GEsamtenergie des Systems
+        t += delta_t;
 
         // Beschreiben des Datenfiles
         fprintf(pos_file, "%g", t);
@@ -105,7 +101,6 @@ int main(void) {
         }
         fprintf(pos_file, "\n"); 
 
-        t += delta_t;
     }
 
     fclose(pos_file);

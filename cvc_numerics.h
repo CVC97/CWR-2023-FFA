@@ -4,8 +4,11 @@
 
 #define CVC_PI 3.14159265358979323846
 
+
 // Typ gewöhnliche DGL
 typedef int ode_func(double, const double[], double[], void*);
+typedef int sde_func(double, const double[], double[], double, void*);
+
 
 // Potenz für natürliche Zahlen x^n
 double npow(double x, int n);

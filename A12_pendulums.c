@@ -31,11 +31,6 @@ static const char energy_file_name[] = "data/A12_energy.csv";
 
 /* TODO */
 int pendumlumsODE(double t, const double y[], double f[], void *params) {
-    // Ableitungs-Array mit Nullen füllen
-    for (int i = 0; i < 2*N; i++) {
-        f[i] = 0;
-    }
-
     // Geschwindigkeiten aus dem Zustandsarray übertragen
     for (int i = 0; i < N; i++) {                   
         f[i] = y[N+i];
