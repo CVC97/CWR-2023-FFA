@@ -67,9 +67,9 @@ int main(void) {
     double delta_t = 0.01;
     while (t < 365) {
         t += delta_t;
-        euler_step(t, delta_t, y_SEIR_1_25, SEIR_ODE, 4, params_SEIR_1_25);
-        euler_step(t, delta_t, y_SEIR_1_5, SEIR_ODE, 4, params_SEIR_1_5);
-        euler_step(t, delta_t, y_SEIR_2, SEIR_ODE, 4, params_SEIR_2);
+        cvc_euler_step(t, delta_t, y_SEIR_1_25, SEIR_ODE, 4, params_SEIR_1_25);
+        cvc_euler_step(t, delta_t, y_SEIR_1_5, SEIR_ODE, 4, params_SEIR_1_5);
+        cvc_euler_step(t, delta_t, y_SEIR_2, SEIR_ODE, 4, params_SEIR_2);
         fprintf(file_epidemic_modelling_1_25, "%f, %f, %f, %f, %f\n", t, y_SEIR_1_25[0], y_SEIR_1_25[1], y_SEIR_1_25[2], y_SEIR_1_25[3]);
         fprintf(file_epidemic_modelling_1_5, "%f, %f, %f, %f, %f\n", t, y_SEIR_1_5[0], y_SEIR_1_5[1], y_SEIR_1_5[2], y_SEIR_1_5[3]);
         fprintf(file_epidemic_modelling_2, "%f, %f, %f, %f, %f\n", t, y_SEIR_2[0], y_SEIR_2[1], y_SEIR_2[2], y_SEIR_2[3]);

@@ -6,7 +6,6 @@
 
 // physikalische Parameter und Konstanten
 const int N = 1;
-const double pi = 3.14159265359;
 const double k = 100;
 const double mass = 1;
 const double v_0 = 1;
@@ -23,7 +22,7 @@ int main(void) {
     int dimension = 2 * N;
 
     // Feste analytische Parameter
-    double T = 2 * pi * sqrt(mass / k);
+    double T = 2 * cvc_PI * sqrt(mass / k);
     double x_T4 = v_0 * sqrt(mass / k);
     double T4 = T/4;
 
@@ -46,19 +45,19 @@ int main(void) {
 
         // Numerische Integration bis vorletztem Integrationsschritt
         while (t + d_t < T4) {
-            rk2_step(t, d_t, y_rk2, F_pendulum_ode, dimension, NULL);
+            cvc_rk2_step(t, d_t, y_rk2, F_pendulum_ode, dimension, NULL);
             //printf("x (RK29: %g\n", y_rk2[0]);
-            rk4_step(t, d_t, y_rk4, F_pendulum_ode, dimension, NULL);
-            euler_step(t, d_t, y_euler, F_pendulum_ode, dimension, NULL);
-            verlet_step(t, d_t, y_verlet, F_pendulum_ode, dimension, NULL);
+            cvc_rk4_step(t, d_t, y_rk4, F_pendulum_ode, dimension, NULL);
+            cvc_euler_step(t, d_t, y_euler, F_pendulum_ode, dimension, NULL);
+            cvc_verlet_step(t, d_t, y_verlet, F_pendulum_ode, dimension, NULL);
             t += d_t;
         }
 
         // letzter Integrationsschritt mit verbleibender Zeit
-        rk2_step(t, T4-t, y_rk2, F_pendulum_ode, dimension, NULL);
-        rk2_step(t, T4-t, y_rk4, F_pendulum_ode, dimension, NULL);
-        euler_step(t, T4-t, y_euler, F_pendulum_ode, dimension, NULL);
-        verlet_step(t, T4-t, y_verlet, F_pendulum_ode, dimension, NULL);
+        cvc_rk2_step(t, T4-t, y_rk2, F_pendulum_ode, dimension, NULL);
+        cvc_rk2_step(t, T4-t, y_rk4, F_pendulum_ode, dimension, NULL);
+        cvc_euler_step(t, T4-t, y_euler, F_pendulum_ode, dimension, NULL);
+        cvc_verlet_step(t, T4-t, y_verlet, F_pendulum_ode, dimension, NULL);
 
         // Berechnung und Ausgabe des "Residuums"         
         residue_RK2 = fabs(y_rk2[0] - x_T4);

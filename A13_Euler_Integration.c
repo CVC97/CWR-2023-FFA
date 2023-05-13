@@ -47,17 +47,17 @@ double pendulums_energy(const double y[]) {
 
     // Kinetische Energie berechnen
     for (int i = 0; i < N; i++) {
-        E_kin += mass / 2 * npow(y[N+i], 2);
+        E_kin += mass / 2 * cvc_npow(y[N+i], 2);
     }
 
     // Potentielle Energie
-    E_pot += k / 2 * npow(y[0], 2);  
+    E_pot += k / 2 * cvc_npow(y[0], 2);  
     if (N != 1) {
-        E_pot += k / 2 * npow(y[1] - y[0] - 1, 2);
-        E_pot += k / 2 * npow(y[N-1] - y[N-2] - 1, 2);                                     
+        E_pot += k / 2 * cvc_npow(y[1] - y[0] - 1, 2);
+        E_pot += k / 2 * cvc_npow(y[N-1] - y[N-2] - 1, 2);                                     
     }
     for (int i = 1; i < N - 1; i++) {                          
-        E_pot += k / 2 * npow(y[i] - y[i-1] - 1, 2) + k / 2 * npow(y[i+1] - y[i] - 1, 2); 
+        E_pot += k / 2 * cvc_npow(y[i] - y[i-1] - 1, 2) + k / 2 * cvc_npow(y[i+1] - y[i] - 1, 2); 
     }
     return E_kin + E_pot;
 }
@@ -89,7 +89,7 @@ int main(void) {
 
     // Durchlaufen der Zeitschritte
     while (t < T_max) {
-        euler_step(t, delta_t, y, pendumlumsODE, dimension, NULL);      // Aufruf der Integrationsfunktion
+        cvc_euler_step(t, delta_t, y, pendumlumsODE, dimension, NULL);      // Aufruf der Integrationsfunktion
         energy = pendulums_energy( (const double*) y);                  // Berechnung der GEsamtenergie des Systems
         t += delta_t;
 

@@ -3,26 +3,23 @@
 #include <gsl/gsl_rng.h>
 
 
+#define cvc_PI 3.14159265358979323846
+
+
 // Struktur eines 2er Tupels
-struct tuple_2 {
+struct cvc_tuple_2 {
     double x1;
     double x2;
 };
 
 
 // Typ gewöhnliche DGL
-typedef int ode_func(double, const double[], double[], void*);
-typedef int sde_func(double, const double[], double[], double, void*);
-
-
-// e^(-y^2)
-static double e_y2(double y) {
-    return 2 * exp(-pow(y, 2)) / sqrt(M_PI);
-}
+typedef int cvc_ode_func(double, const double[], double[], void*);
+typedef int cvc_sde_func(double, const double[], double[], double, void*);
 
 
 // Potenz für natürliche Zahlen x^n
-double npow(double x, int n) {
+double cvc_npow(double x, int n) {
     double prod = x;
     for (int i = 1; i < n; i++) {
         prod *= x;
@@ -31,14 +28,20 @@ double npow(double x, int n) {
 }
 
 
+// e^(-y^2)
+static double cvc_e_y2(double y) {
+    return 2 * exp(-cvc_npow(y, 2)) / sqrt(cvc_PI);
+}
+
+
 // Norm in 2 dimensions
-double norm_2D(double x, double y) {
-    return sqrt(npow(x, 2) + npow(y, 2));
+double cvc_norm_2D(double x, double y) {
+    return sqrt(cvc_npow(x, 2) + cvc_npow(y, 2));
 }
 
 
 // numerische Integration (Trapez)
-double integrate_trapez(double left, double right, int N, double integrand(double)) {
+double cvc_integrate_trapez(double left, double right, int N, double integrand(double)) {
     double sum = 0, interval = (right - left) / N;
     for (int i = 0; i < N; i++) {
         sum += (integrand(left + i*interval) + integrand(left + (i+1)*interval)) * interval / 2;
@@ -48,7 +51,7 @@ double integrate_trapez(double left, double right, int N, double integrand(doubl
 
 
 // numerische Integration: Simpsonregel
-double integrate_simpson(double func(double), double x, int N) {
+double cvc_integrate_simpson(double func(double), double x, int N) {
     double delta_x = x / N, sum = 0, x_i, m_i, x_ii;
     for (int i = 0; i < N; i++) {
         x_i = delta_x * i;
@@ -61,7 +64,7 @@ double integrate_simpson(double func(double), double x, int N) {
 
 
 // numerische Integration: Simpsonregel mit Funktion func für Integralgrenzen (left, right), Schrittweite dx und Parameter *params
-double integrate_simpson_2_param(double left, double right, double dx, double func(double, void*), void *params) {
+double cvc_integrate_simpson_2_param(double left, double right, double dx, double func(double, void*), void *params) {
     double x_i = left, m_i, x_ii, sum = 0;
     while (x_i < right) {
         m_i = x_i + 0.5*dx;
@@ -74,38 +77,38 @@ double integrate_simpson_2_param(double left, double right, double dx, double fu
 
 
 // numerische Integration Fehlerfunktion: Mittelpunktsregel
-double erf_midpoint(double x, double delta_x) {
+double cvc_erf_midpoint(double x, double delta_x) {
     int N = fabs(x) / delta_x;
     double sum = 0, d_x = x / N;
     for (int i = 0; i < N; i++) {
-        sum += e_y2( (i+0.5)*d_x ) * d_x;
+        sum += cvc_e_y2( (i+0.5)*d_x ) * d_x;
     }
     return sum;
 }
 
 
 // numerische Integration Fehlerfunktion: Simpsonregel
-double erf_simpson(double x, double delta_x) {
+double cvc_erf_simpson(double x, double delta_x) {
     int N = fabs(x) / delta_x;
     double sum = 0, d_x = x / N, x_i, m_i, x_ii;
     for (int i = 0; i < N; i++) {
         x_i = d_x * i;
         m_i = d_x * (i+0.5);
         x_ii = d_x * (i+1);
-        sum += ( e_y2(x_i) + 4*e_y2(m_i) + e_y2(x_ii) ) * d_x / 6;
+        sum += (cvc_e_y2(x_i) + 4*cvc_e_y2(m_i) + cvc_e_y2(x_ii)) * d_x / 6;
     }
     return sum;
 }
 
 
 // numerische Differenzierung: zentrale Differenz
-double diff(double x, double delta, double func(double)) {
+double cvc_diff(double x, double delta, double func(double)) {
     return ( func(x + delta) - func(x - delta) ) / ( 2 * delta);
 }
 
 
 // Nullstellensuche: Bisektion
-double find_root_bisection(double func(double), double a, double b, double epsilon, int max_iter) {
+double cvc_find_root_bisection(double func(double), double a, double b, double epsilon, int max_iter) {
     double x_mid, f_x_mid, f_a, f_b;
     int i = 0;
     while (i++ < max_iter) {
@@ -127,12 +130,12 @@ double find_root_bisection(double func(double), double a, double b, double epsil
 
 
 // numerische Nullstellensuche: Newton-Raphson
-double find_root_newton_raphson(double func(double), double x0, double delta, double rel_tol, int max_iter) {
+double cvc_find_root_newton_raphson(double func(double), double x0, double delta, double rel_tol, int max_iter) {
     int i = 0;
     double x_old;
     while (i++ < max_iter) {
         x_old = x0;
-        x0 -= func(x0) / diff(x0, delta, func);
+        x0 -= func(x0) / cvc_diff(x0, delta, func);
         if (fabs(x_old - x0) / fabs(x0) < rel_tol) {
             break;
         }
@@ -142,7 +145,7 @@ double find_root_newton_raphson(double func(double), double x0, double delta, do
 
 
 // kombinierte Lösungsmethode quadratischer Gleichungen
-struct tuple_2 solve_quadratic(double a, double b, double c) {
+struct cvc_tuple_2 cvc_solve_quadratic(double a, double b, double c) {
     double sol1, sol2;
     if (b > 0) {
         sol1 = (2*c) / (-b - sqrt(pow(b, 2) - 4*a*c));
@@ -151,7 +154,7 @@ struct tuple_2 solve_quadratic(double a, double b, double c) {
         sol1 = (-b + sqrt(pow(b, 2) - 4*a*c)) / (2*a);
         sol2 = (2*c) / (-b + sqrt(pow(b, 2) - 4*a*c));
     }
-    struct tuple_2 quadratic_solution;
+    struct cvc_tuple_2 quadratic_solution;
     quadratic_solution.x1 = sol1;
     quadratic_solution.x2 = sol2;
     return quadratic_solution;
@@ -159,7 +162,7 @@ struct tuple_2 solve_quadratic(double a, double b, double c) {
 
 
 // Tupel aus 2 normalverteile Zuvallsgrößen für gegebenen (GSL_RNG) Zufallsgenerator: Polarmethode
-struct tuple_2 random_gaussian(void) {
+struct cvc_tuple_2 cvc_random_gaussian(void) {
     static gsl_rng* generator = NULL;                           // Seed with time applied to given generator
     if (generator == NULL) {
         generator = gsl_rng_alloc(gsl_rng_taus2);
@@ -172,7 +175,7 @@ struct tuple_2 random_gaussian(void) {
         r = pow(u, 2) + pow(v, 2);
     }
     m = sqrt(-2*log(r)/r);
-    struct tuple_2 random_2;                                    // Tupel mit 2 normalverteilten Zufallszahlen
+    struct cvc_tuple_2 random_2;                                    // Tupel mit 2 normalverteilten Zufallszahlen
     random_2.x1 = u*m;
     random_2.x2 = v*m;
     return random_2;
@@ -180,7 +183,7 @@ struct tuple_2 random_gaussian(void) {
 
 
 // MC-Berechnung der Dichte im Hyperquader [ai, bi] mit dim Dimensionen für die Dichtefunktion func()  
-double mc_integrate(double func(double*, int), double a[], double b[], int dim, int N) {
+double cvc_mc_integrate(double func(double*, int), double a[], double b[], int dim, int N) {
     static gsl_rng* generator = NULL;                           // Initialisierung statischer Generator
     if (generator == NULL) {
         generator = gsl_rng_alloc(gsl_rng_taus2);
@@ -203,7 +206,7 @@ double mc_integrate(double func(double*, int), double a[], double b[], int dim, 
 
 
 // 2-Dimensionale Integration: Mittelpunktsregel
-double integrate_midpoint_2D(int A(double, double), double a_x, double b_x, double a_y, double b_y, double delta_x, double f(double, double)) {
+double cvc_integrate_midpoint_2D(int A(double, double), double a_x, double b_x, double a_y, double b_y, double delta_x, double f(double, double)) {
     int N_x = (b_x - a_x) / delta_x;
     int N_y = (b_y - a_y) / delta_x;
     double x, y, sum = 0;
@@ -219,7 +222,7 @@ double integrate_midpoint_2D(int A(double, double), double a_x, double b_x, doub
 
 
 // 2-Dimensionale Integration: MC
-double mc_integrate_2D(int A(double, double), double a_x, double b_x, double a_y, double b_y, int N, double f(double, double)) {
+double cvc_mc_integrate_2D(int A(double, double), double a_x, double b_x, double a_y, double b_y, int N, double f(double, double)) {
     static gsl_rng* generator = NULL;
     if (generator == NULL) {
         generator = gsl_rng_alloc(gsl_rng_taus2);
@@ -236,7 +239,7 @@ double mc_integrate_2D(int A(double, double), double a_x, double b_x, double a_y
 
 
 // numerische Euler Integration des Zustandsarrays y mit gegebenen Parametern
-void euler_step(double t, double delta_t, double y[], ode_func func, int dimension, void *params) {
+void cvc_euler_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params) {
     double *f;
     f = (double*) calloc(dimension, sizeof(double));           // Reservierung des Ableitungsarrays
     func(t, y, f, params);                                      // Füllen des Ableitungsarrays über Aufruf der entprechenden ODE
@@ -249,7 +252,7 @@ void euler_step(double t, double delta_t, double y[], ode_func func, int dimensi
 
 
 // numerische Integration mittels Runge-Kutta 2. Ordnung des Zustandsarrays y mit gegebenen Parametern
-void rk2_step(double t, double delta_t, double y[], ode_func func, int dimension, void *params) {
+void cvc_rk2_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params) {
     double *support, *k1, *k2;
     support = (double*) calloc(dimension, sizeof(double));
     k1 = (double*) calloc(dimension, sizeof(double));
@@ -270,7 +273,7 @@ void rk2_step(double t, double delta_t, double y[], ode_func func, int dimension
 
 
 // numerische Integration mittels Runge-Kutta 2. Ordnung des Zustandsarrays y mit gegebenen Parametern
-void rk4_step(double t, double delta_t, double y[], ode_func func, int dimension, void *params) {
+void cvc_rk4_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params) {
     double *support, *k1, *k2, *k3, *k4;
     support = (double*) malloc(sizeof(double) * dimension);
     k1 = (double*) calloc(dimension, sizeof(double));
@@ -303,7 +306,7 @@ void rk4_step(double t, double delta_t, double y[], ode_func func, int dimension
 
 
 // numerische Integration
-void verlet_step(double t, double delta_t, double y[], ode_func func, int dimension, void *params) {
+void cvc_verlet_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params) {
     int N = dimension / 2;
     double *a1, *a2;
     a1 = (double*) calloc(dimension, sizeof(double));

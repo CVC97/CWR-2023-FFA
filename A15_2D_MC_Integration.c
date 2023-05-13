@@ -8,13 +8,13 @@
 
 // zu integrierende Funktion f(x, y)
 double f(double x, double y) {
-    return pow(x, 2) + 6*x*y + pow(y, 2);
+    return cvc_npow(x, 2) + 6*x*y + cvc_npow(y, 2);
 }
 
 
 // Areal A über das integriert wird
 int A(double x, double y) {
-    if (pow(x, 2) + pow(y, 2) <= 1) {
+    if (cvc_npow(x, 2) + cvc_npow(y, 2) <= 1) {
         return 1;
     }
     return 0;
@@ -33,7 +33,7 @@ int main(void) {
     double delta_x = 0.1;
     for (int i = 0; i < 6; i++) {
         delta_x /= 2;
-        integral_midpoint = integrate_midpoint_2D(A, x_a, x_b, y_a, y_b, delta_x, f);
+        integral_midpoint = cvc_integrate_midpoint_2D(A, x_a, x_b, y_a, y_b, delta_x, f);
         fprintf(file_midpoint_integration, "%g, %g\n", delta_x, integral_midpoint);
         printf("Delta x: %f\n", delta_x);
     }
@@ -46,7 +46,7 @@ int main(void) {
     int N = 10;
     for (int i = 0; i < 6; i++) {
         N *= 10;
-        integral_mc = mc_integrate_2D(A, x_a, x_b, y_a, y_b, N, f);
+        integral_mc = cvc_mc_integrate_2D(A, x_a, x_b, y_a, y_b, N, f);
         fprintf(file_mc_integration, "%d, %g\n", N, integral_mc);
         printf("Anzahl Stützstellen: %d\n", N);
     }

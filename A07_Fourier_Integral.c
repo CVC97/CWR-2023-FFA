@@ -43,7 +43,7 @@ int main(void) {
             right = M[i];                                   // obere Integralgrenze
 
             // Hinzufügen der 4 Integralwerte für je ein k 
-            integral_sum = integrate_simpson_2_param(left, right, delta_x, fourier_integrand_cosine, parameters);
+            integral_sum = cvc_integrate_simpson_2_param(left, right, delta_x, fourier_integrand_cosine, parameters);
             fprintf(fourier_file, ", %g", integral_sum);
         }
         k += 20.0 / (N_steps-1);                            // Erhöhungs des k

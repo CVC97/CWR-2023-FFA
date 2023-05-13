@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "cvc_numerics.h"
 
 
 // Struktur eines 2er Tupels
@@ -47,11 +48,11 @@ struct tupel_2 solve_quadratic(double a, double b, double c) {
     double sol1, sol2;
 
     if (b > 0) {
-        sol1 = (2*c) / (-b - sqrt(pow(b, 2) - 4*a*c));
-        sol2 = (-b - sqrt(pow(b, 2) - 4*a*c)) / (2*a);
+        sol1 = (2*c) / (-b - sqrt(cvc_npow(b, 2) - 4*a*c));
+        sol2 = (-b - sqrt(cvc_npow(b, 2) - 4*a*c)) / (2*a);
     } else {
-        sol1 = (-b + sqrt(pow(b, 2) - 4*a*c)) / (2*a);
-        sol2 = (2*c) / (-b + sqrt(pow(b, 2) - 4*a*c));
+        sol1 = (-b + sqrt(cvc_npow(b, 2) - 4*a*c)) / (2*a);
+        sol2 = (2*c) / (-b + sqrt(cvc_npow(b, 2) - 4*a*c));
     }
 
     struct tupel_2 quadratic_solution;

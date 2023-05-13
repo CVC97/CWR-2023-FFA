@@ -72,8 +72,15 @@ cvc_numerics.o: cvc_numerics.c
 
 
 # A08
-A08_Gleitkommagenauigkeit: A08_Gleitkommagenauigkeit.c
-	gcc A08_Gleitkommagenauigkeit.c -o A08_Gleitkommagenauigkeit $(FLAGS)
+A08_Gleitkommagenauigkeit: A08_Gleitkommagenauigkeit.o cvc_numerics.o
+	gcc A08_Gleitkommagenauigkeit.o cvc_numerics.o -o A08_Gleitkommagenauigkeit $(FLAGS)
+	rm *.o
+
+A08_Gleitkommagenauigkeit.o: A08_Gleitkommagenauigkeit.c
+	gcc -c A08_Gleitkommagenauigkeit.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
 
 
 # A09

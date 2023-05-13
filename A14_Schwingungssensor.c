@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "../cvc_numerics.h"
+#include "cvc_numerics.h"
 
 
 // Physikalische Konstanten des Systems
@@ -22,8 +22,8 @@ int ODE_dual_springs(double t, const double y[], double f[], void *params) {
     f[1] = y[3];
 
     // Berechnung der Abstände der Masse zur jeweiligen Federverankerung
-    double dist_r_A = norm_2D(y[0] - r_A[0], y[1] - r_A[1]) + smoothing_factor;
-    double dist_r_B = norm_2D(y[0] - r_B[0], y[1] - r_B[1]) + smoothing_factor;
+    double dist_r_A = cvc_norm_2D(y[0] - r_A[0], y[1] - r_A[1]) + smoothing_factor;
+    double dist_r_B = cvc_norm_2D(y[0] - r_B[0], y[1] - r_B[1]) + smoothing_factor;
 
     // Berechnung der richtungslosen Kräfte beider Federn
     double f_A = -k * (dist_r_A - r_0);
@@ -46,7 +46,7 @@ int ODE_dual_springs(double t, const double y[], double f[], void *params) {
 int main(void) {
     // Simulationsparameter
     int dimension = 2 * N;                                                      // Dimensionalität des Zustandsvektors des Systems
-    double T_x = 2 * CVC_PI / sqrt(2*k);                                        // analytische Periodendauer T_x
+    double T_x = 2 * cvc_PI / sqrt(2*k);                                        // analytische Periodendauer T_x
     double x_0 = -0.5;                                                          // Startkoordinate x_0
     double t = 0, delta_t = 1e-4;                                               // Startzeit t = 0, Größe der Zeitschritte delta_t
 
@@ -64,7 +64,7 @@ int main(void) {
     double *rk4_zero_crossings = (double*) malloc(sizeof(double));              // Reservierung Speicher für Nulldurchgänge (RK4)
 
     // Ausgabedatei
-    FILE* pos_file = fopen("A14_Schwingungssensor_pos.csv", "w"); 
+    FILE* pos_file = fopen("data/A14_Schwingungssensor_pos.csv", "w"); 
     fprintf(pos_file, "Zeit, x(t) [Euler], y(t) [Euler], x(t) [RK4], y(t) [RK4]\n");
     fprintf(pos_file, "%g, %g, %g, %g, %g\n", t, y_euler[0], y_euler[1], y_rk4[0], y_rk4[1]);
 
@@ -75,8 +75,8 @@ int main(void) {
         double x_pre_euler = y_euler[0];                                        // x-Koordinate vor Integration (Euler) 
         double x_pre_rk4 = y_rk4[0];                                            // x-Koordinate vor Integration (RK4)
 
-        euler_step(t, delta_t, y_euler, ODE_dual_springs, dimension, NULL);
-        rk4_step(t, delta_t, y_rk4, ODE_dual_springs, dimension, NULL);
+        cvc_euler_step(t, delta_t, y_euler, ODE_dual_springs, dimension, NULL);
+        cvc_rk4_step(t, delta_t, y_rk4, ODE_dual_springs, dimension, NULL);
 
         double x_post_euler = y_euler[0];                                       // x-Koordinate nach Integration (Euler) 
         double x_post_rk4 = y_rk4[0];                                           // x-Koordinate nach Integration (Euler) 
@@ -117,7 +117,7 @@ int main(void) {
 // +++++ (Aufgabe 6: Abweichung der numerischen von der analytischen Lösung für variierte Zeitschritte delta_t) +++++
 
     // Ausgabdatei
-    FILE* res_file = fopen("A14_Schwingungssensor_res.csv", "w");
+    FILE* res_file = fopen("data/A14_Schwingungssensor_res.csv", "w");
     fprintf(res_file, "delta_t, Residue Euler, Residue RK4\n"); 
 
     // Itereation über 100 logarithmisch gleichverteilte Zeitschritte delta_t
@@ -131,13 +131,13 @@ int main(void) {
         // Integration über 10 Periodendauern T_x
         while (t + delta_t < 10 * T_x) {
             t += delta_t;
-            euler_step(t, delta_t, y_euler_res, ODE_dual_springs, dimension, NULL);
-            rk4_step(t, delta_t, y_rk4_res, ODE_dual_springs, dimension, NULL);
+            cvc_euler_step(t, delta_t, y_euler_res, ODE_dual_springs, dimension, NULL);
+            cvc_rk4_step(t, delta_t, y_rk4_res, ODE_dual_springs, dimension, NULL);
         }
         
         // zusätzlicher Zeitschritt (Differenz zur analytischen T_x) für Vergleichbarkeit mit analytischer Lösung
-        euler_step(t, 10*T_x - t, y_euler_res, ODE_dual_springs, dimension, NULL);
-        rk4_step(t, 10*T_x - t, y_rk4_res, ODE_dual_springs, dimension, NULL);
+        cvc_euler_step(t, 10*T_x - t, y_euler_res, ODE_dual_springs, dimension, NULL);
+        cvc_rk4_step(t, 10*T_x - t, y_rk4_res, ODE_dual_springs, dimension, NULL);
 
         // Ausgeben der Residuen
         fprintf(res_file, "%g, %g, %g\n", delta_t, fabs(y_euler_res[0] - x_0), fabs(y_rk4_res[0] - x_0));
@@ -154,16 +154,16 @@ int main(void) {
     double y3_rk4[4] = {0, -0.3, 1};
 
     // Ausgabedatei
-    FILE* fancy_pos_file = fopen("A14_Schwingungssensor_fancy_pos.csv", "w"); 
+    FILE* fancy_pos_file = fopen("data/A14_Schwingungssensor_fancy_pos.csv", "w"); 
     fprintf(fancy_pos_file, "Zeit, x1(t), y1(t), x2(t), y2(t), x3(t), y3(t)\n");
     fprintf(fancy_pos_file, "%g, %g, %g, %g, %g, %g, %g\n", t, y1_rk4[0], y1_rk4[1], y2_rk4[0], y2_rk4[1], y3_rk4[0], y3_rk4[1]);
 
     // Integration über 10 Periodendauern T_x
     while (t <= 10 * T_x) {
         t += delta_t;
-        rk4_step(t, delta_t, y1_rk4, ODE_dual_springs, dimension, NULL);
-        rk4_step(t, delta_t, y2_rk4, ODE_dual_springs, dimension, NULL);
-        rk4_step(t, delta_t, y3_rk4, ODE_dual_springs, dimension, NULL);
+        cvc_rk4_step(t, delta_t, y1_rk4, ODE_dual_springs, dimension, NULL);
+        cvc_rk4_step(t, delta_t, y2_rk4, ODE_dual_springs, dimension, NULL);
+        cvc_rk4_step(t, delta_t, y3_rk4, ODE_dual_springs, dimension, NULL);
         fprintf(fancy_pos_file, "%g, %g, %g, %g, %g, %g, %g\n", t, y1_rk4[0], y1_rk4[1], y2_rk4[0], y2_rk4[1], y3_rk4[0], y3_rk4[1]);
     }
     fclose(fancy_pos_file);
