@@ -55,7 +55,7 @@ int main(void) {
 
         // letzter Integrationsschritt mit verbleibender Zeit
         cvc_rk2_step(t, T4-t, y_rk2, F_pendulum_ode, dimension, NULL);
-        cvc_rk2_step(t, T4-t, y_rk4, F_pendulum_ode, dimension, NULL);
+        cvc_rk4_step(t, T4-t, y_rk4, F_pendulum_ode, dimension, NULL);
         cvc_euler_step(t, T4-t, y_euler, F_pendulum_ode, dimension, NULL);
         cvc_verlet_step(t, T4-t, y_verlet, F_pendulum_ode, dimension, NULL);
 
