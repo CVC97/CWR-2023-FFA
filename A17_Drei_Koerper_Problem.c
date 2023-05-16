@@ -10,8 +10,7 @@ const double m2 = 10e0;
 const double m3 = 20e0;
 
 const double G = 4 * cvc_PI * cvc_PI;                                           // Gravitationskonstante
-// const double au_per_year = 1.49598e+8;                                          // 1 Astronomische Einheit / Jahr in km / Jahr
-const double smoothing_factor = 10e-1;                                         // Vermeidung numerischer Fehler bei Division (durch 0)
+const double smoothing_factor = 10e-1;                                          // Vermeidung numerischer Fehler bei Division (durch 0)
 
 
 // Integrationsparameter
