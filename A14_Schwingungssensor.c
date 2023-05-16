@@ -12,7 +12,7 @@ const double r_0 = 1;                                                           
 const double r_A[2] = {-1, 0};                                                  // Position der Verankerung der linken Feder r_A
 const double r_B[2] = {1, 0};                                                   // Position der Verankerung der rechten Feder r_b
 
-const double smoothing_factor = 1e-6;                                           // Vermeidung von numerischen Fehlern bei Division (durch 0)
+const double smoothing_factor = 1e-14;                                           // Vermeidung von numerischen Fehlern bei Division (durch 0)
 
 
 // (gewöhnliche) Differentialgleichung des Federsystems

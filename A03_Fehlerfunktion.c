@@ -42,8 +42,8 @@ int main(void) {
     fprintf(file_erf_simpson, "Integralgrenze x, Ergebnis S_erf\n");
     for (int i = 0; i < 100; i++) {
         x = -2 + i / (99.0 / 4);
-        erf_integrated_simpson = erf_simpson(x, delta_x);
-        erf_integrated_midpoint = erf_midpoint(x, delta_x);
+        erf_integrated_simpson = cvc_erf_simpson(x, delta_x);
+        erf_integrated_midpoint = cvc_erf_midpoint(x, delta_x);
         fprintf(file_erf_simpson, "%.8f, %.8f, %.8f, %.8f\n", x, erf_integrated_simpson, e_y2(x), erf_integrated_midpoint);
     }
     fclose(file_erf_simpson);

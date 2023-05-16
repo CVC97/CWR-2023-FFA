@@ -163,12 +163,12 @@ struct cvc_tuple_2 cvc_solve_quadratic(double a, double b, double c) {
 
 // Tupel aus 2 normalverteile Zuvallsgrößen für gegebenen (GSL_RNG) Zufallsgenerator: Polarmethode
 struct cvc_tuple_2 cvc_random_gaussian(void) {
-    static gsl_rng* generator = NULL;                           // Seed with time applied to given generator
+    static gsl_rng* generator = NULL;                               // Seed with time applied to given generator
     if (generator == NULL) {
         generator = gsl_rng_alloc(gsl_rng_taus2);
         gsl_rng_set(generator, time(NULL));  
     }    
-    double u, v, r = 0, m;                                      // Erstelung 2 Zufallszahlen u, v
+    double u, v, r = 0, m;                                          // Erstelung 2 Zufallszahlen u, v
     while (r > 1 || r == 0){
         u = (gsl_rng_uniform(generator) * 2) - 1;
         v = (gsl_rng_uniform(generator) * 2) - 1;
@@ -184,16 +184,16 @@ struct cvc_tuple_2 cvc_random_gaussian(void) {
 
 // MC-Berechnung der Dichte im Hyperquader [ai, bi] mit dim Dimensionen für die Dichtefunktion func()  
 double cvc_mc_integrate(double func(double*, int), double a[], double b[], int dim, int N) {
-    static gsl_rng* generator = NULL;                           // Initialisierung statischer Generator
+    static gsl_rng* generator = NULL;                               // Initialisierung statischer Generator
     if (generator == NULL) {
         generator = gsl_rng_alloc(gsl_rng_taus2);
         gsl_rng_set(generator, time(NULL));  
     }  
-    double V = 1, *y, density_sum = 0;                          // Gesamtvolumen
+    double V = 1, *y, density_sum = 0;                              // Gesamtvolumen
     for (int i_dim = 0; i_dim < dim; i_dim++) {
         V *= b[i_dim] - a[i_dim];
     }
-    y = (double*) malloc(sizeof(double) * dim);                 // Erstellung N Zufallsvektoren y[]
+    y = (double*) malloc(sizeof(double) * dim);                     // Erstellung N Zufallsvektoren y[]
     for (int i = 0; i < N; i++) {
         for (int i_dim = 0; i_dim < dim; i_dim++) {
             *(y + i_dim) = gsl_rng_uniform(generator) * (b[i_dim] - a[i_dim]) + a[i_dim];
@@ -241,7 +241,7 @@ double cvc_mc_integrate_2D(int A(double, double), double a_x, double b_x, double
 // numerische Euler Integration des Zustandsarrays y mit gegebenen Parametern
 void cvc_euler_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params) {
     double *f;
-    f = (double*) calloc(dimension, sizeof(double));           // Reservierung des Ableitungsarrays
+    f = (double*) calloc(dimension, sizeof(double));            // Reservierung des Ableitungsarrays
     func(t, y, f, params);                                      // Füllen des Ableitungsarrays über Aufruf der entprechenden ODE
     for (int i = 0; i < dimension; i++) {
         y[i] += f[i] * delta_t;
@@ -280,7 +280,7 @@ void cvc_rk4_step(double t, double delta_t, double y[], cvc_ode_func func, int d
     k2 = (double*) calloc(dimension, sizeof(double));
     k3 = (double*) calloc(dimension, sizeof(double));
     k4 = (double*) calloc(dimension, sizeof(double));
-    func(t, y, k1, NULL);                                       // Berechnung k1 = f(t, y) * dt und support = y + k1/2
+    func(t, y, k1, params);                                       // Berechnung k1 = f(t, y) * dt und support = y + k1/2
     for (int i = 0; i < dimension; i++) {
         k1[i] *= delta_t;
         support[i] = y[i] + k1[i] / 2;
