@@ -13,8 +13,9 @@ typedef int cvc_sde_func(double, const double[], double[], double, void*);
 // Potenz für natürliche Zahlen x^n
 double cvc_npow(double x, int n);
 
-// Norm in 2 dimensions
+// Norm in 2 / 3 dimensions
 double cvc_norm_2D(double x, double y);
+double cvc_norm_3D(double x, double y, double z);
 
 
 // Numerical Integration

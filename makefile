@@ -143,16 +143,39 @@ cvc_numerics.o: cvc_numerics.c
 
 
 # A15
-A15_2D_MC_Integration: A15_2D_MC_Integration.o cvc_numerics.o
-	gcc A15_2D_MC_Integration.o cvc_numerics.o -o A15_2D_MC_Integration $(FLAGS)
+A15_Konvergenz_Integratoren: A15_Konvergenz_Integratoren.o cvc_numerics.o
+	gcc A15_Konvergenz_Integratoren.o cvc_numerics.o -o A15_Konvergenz_Integratoren $(FLAGS)
 	rm *.o
 
-A15_2D_MC_Integration.o: A15_2D_MC_Integration.c
-	gcc -c A15_2D_MC_Integration.c
+A15_Konvergenz_Integratoren.o: A15_Konvergenz_Integratoren.c
+	gcc -c A15_Konvergenz_Integratoren.c
 
 cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
+
+# A16
+A16_Verlet_Integrator: A16_Verlet_Integrator.o cvc_numerics.o
+	gcc A16_Verlet_Integrator.o cvc_numerics.o -o A16_Verlet_Integrator $(FLAGS)
+	rm *.o
+
+A16_Verlet_Integrator.o: A16_Verlet_Integrator.c
+	gcc -c A16_Verlet_Integrator.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+
+# A17
+A17_Drei_Koerper_Problem: A17_Drei_Koerper_Problem.o cvc_numerics.o
+	gcc A17_Drei_Koerper_Problem.o cvc_numerics.o -o A17_Drei_Koerper_Problem $(FLAGS)
+	rm *.o
+
+A17_Drei_Koerper_Problem.o: A17_Drei_Koerper_Problem.c
+	gcc -c A17_Drei_Koerper_Problem.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
 
 
 # A18
@@ -162,30 +185,6 @@ A18_RK2_Pendel: A18_RK2_Pendel.o cvc_numerics.o
 
 A18_RK2_Pendel.o: A18_RK2_Pendel.c
 	gcc -c A18_RK2_Pendel.c
-
-cvc_numerics.o: cvc_numerics.c
-	gcc -c cvc_numerics.c
-
-
-# A19
-A19_Konvergenz_RK2: A19_Konvergenz_RK2.o cvc_numerics.o
-	gcc A19_Konvergenz_RK2.o cvc_numerics.o -o A19_Konvergenz_RK2 $(FLAGS)
-	rm *.o
-
-A19_Konvergenz_RK2.o: A19_Konvergenz_RK2.c
-	gcc -c A19_Konvergenz_RK2.c
-
-cvc_numerics.o: cvc_numerics.c
-	gcc -c cvc_numerics.c
-
-
-# A21
-A21_Verlet_Integrator: A21_Verlet_Integrator.o cvc_numerics.o
-	gcc A21_Verlet_Integrator.o cvc_numerics.o -o A21_Verlet_Integrator $(FLAGS)
-	rm *.o
-
-A21_Verlet_Integrator.o: A21_Verlet_Integrator.c
-	gcc -c A21_Verlet_Integrator.c
 
 cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
@@ -221,6 +220,18 @@ old_A14_Monte_Carlo_Integration: old_A14_Monte_Carlo_Integration.o cvc_numerics.
 
 old_A14_Monte_Carlo_Integration.o: old_A14_Monte_Carlo_Integration.c
 	gcc -c Aold_14_Monte_Carlo_Integration.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+
+# (old) A15
+old_A15_2D_MC_Integration: old_A15_2D_MC_Integration.o cvc_numerics.o
+	gcc old_A15_2D_MC_Integration.o cvc_numerics.o -o old_A15_2D_MC_Integration $(FLAGS)
+	rm *.o
+
+old_A15_2D_MC_Integration.o: old_A15_2D_MC_Integration.c
+	gcc -c old_A15_2D_MC_Integration.c
 
 cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c

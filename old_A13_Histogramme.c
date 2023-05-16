@@ -7,7 +7,7 @@
 #include "cvc_numerics.h"
 
 // Struktur eines 2er Tupels
-struct tuple_2 {
+struct cvc_tuple_2 {
     double x1;
     double x2;
 };
@@ -25,8 +25,8 @@ int main(void) {
     printf("hi");
 
     for (int i = 0; i < 5e6; i++) {
-        rand1 = random_gaussian().x1;
-        rand2 = random_gaussian().x2;
+        rand1 = cvc_random_gaussian().x1;
+        rand2 = cvc_random_gaussian().x2;
 
         printf("iter: %i\trand1: %f, rand2: %f\n", i, rand1, rand2);
 
