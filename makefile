@@ -238,6 +238,18 @@ cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
 
+# (old) A23
+old_A23_Shooting_Methode: old_A23_Shooting_Methode.o cvc_numerics.o
+	gcc old_A23_Shooting_Methode.o cvc_numerics.o -o old_A23_Shooting_Methode $(FLAGS)
+	rm *.o
+
+old_A23_Shooting_Methode.o: old_A23_Shooting_Methode.c
+	gcc -c old_A23_Shooting_Methode.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+
 # Commands
 o_delete:
 	rm *.o
