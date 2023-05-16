@@ -35,6 +35,7 @@ double G(double v0) {
         t += delta_t;
     }
     cvc_verlet_step(t, tf - t, y, ODE_Coulomb, 2, NULL);    // Ausgleichszeitschritt
+    printf("DICK: y[0]: %g;\t\t rf: %g\t\t DICK: %g bei %g\n", y[0], rf, y[0] - rf, v0);
     return (y[0] - rf);
 }
 
@@ -43,7 +44,7 @@ int main(void) {
     double v0 = -5;                                         // Startgeschwindigkeit v_t0
 
     // Parameter der Newton-Raphson
-    double delta = 10e-3;                                   // verwendetes Delta bei der Ableitung der Funktion
+    double delta = 10e-4;                                   // verwendetes Delta bei der Ableitung der Funktion
     double rel_tol = 10e-2;                                 // relative Fehlertoleranz
     int max_iter = 10e3;                                    // maximale Anzahl an Iterationen im NR
 
@@ -55,8 +56,9 @@ int main(void) {
     FILE* diff_file = fopen("data/old_A23_Shooting_Methode_Gv.csv", "w");
     fprintf(diff_file, "v0, delta\n");
     int n_v_steps = 100;
+    double left_barrier = -12, right_barrier = 1;
     for (int i = 0; i < n_v_steps; i++) {
-        v0 = -2 - 10.0*i/(n_v_steps - 1);
+        v0 = left_barrier + (right_barrier-left_barrier)*i/(n_v_steps - 1);
         printf("G(v0) = %g\t v0 = %g\n", G(v0), v0);
         fprintf(diff_file, "%g, %g\n", v0, G(v0));
     }
