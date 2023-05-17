@@ -70,10 +70,7 @@ int main(void) {
     double y[dimension], energy;
     for (int i = 0; i < N; i++) {
         y[i] = i;
-    }
-
-    for (int i = N; i < 2*N; i++) {                         // Nullen für die Beschleunigungen
-        y[i] = 0;                   
+        y[N+i] = 0;
     }
     y[N] = 20;
 

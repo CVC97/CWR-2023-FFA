@@ -266,8 +266,19 @@ o_delete:
 	rm *.o
 
 
-# Update die Numerik-Bibliotheken im submissions-Folder
-update_numerics:
+# Update die Numerik-Bibliotheken im submissions-Folder (+ Schreischutz)
+push_numerics:
 	cp cvc_numerics.c ../submissions/cvc_numerics.c
 	cp cvc_numerics.h ../submissions/cvc_numerics.h
+	chmod a-w ../submissions/cvc_numerics.c
+	chmod a-w ../submissions/cvc_numerics.c
+
+# Pull Prüfungsaufgaben
+pull_submissions:
+	cp ../submissions/A07_Fourier_Integration/A07_Fourier_Integral .
+	chmod a-wx A07_Fourier_Integral.c
+
+	cp ../submissions/A14_Schwingungssensor/A14_Schwingungssensor.c .
+	chmod a-wx A14_Schwingungssensor.c
+
 

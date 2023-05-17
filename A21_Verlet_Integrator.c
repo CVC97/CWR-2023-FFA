@@ -21,11 +21,6 @@ const double delta_t = 1e-3; // Zeitliche Schrittweite
 
 // Lösen der ODE
 int pendumlumsODE(double t, const double y[], double f[], void *params) {
-    // Ableitungs-Array mit Nullen füllen
-    for (int i = 0; i < 2*N; i++) {
-        f[i] = 0;
-    }
-
     // Geschwindigkeiten aus dem Zustandsarray übertragen
     for (int i = 0; i < N; i++) {                   
         f[i] = y[N+i];
@@ -75,10 +70,7 @@ int main(void) {
     double y[dimension], energy;
     for (int i = 0; i < N; i++) {
         y[i] = i;
-    }
-
-    for (int i = N; i < 2*N; i++) {                         // Nullen für die Beschleunigungen
-        y[i] = 0;                   
+        y[N+i] = 0;
     }
     y[N] = 20;
 

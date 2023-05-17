@@ -35,13 +35,17 @@ double G(double v0) {
         t += delta_t;
     }
     cvc_verlet_step(t, tf - t, y, ODE_Coulomb, 2, NULL);    // Ausgleichszeitschritt
-    printf("DICK: y[0]: %g;\t\t rf: %g\t\t DICK: %g bei %g\n", y[0], rf, y[0] - rf, v0);
-    return (y[0] - rf);
+    // printf("DICK: y[0]: %g;\t\t rf: %g\t\t DICK: %g bei %g\n", y[0], rf, y[0] - rf, v0);
+    return y[0] - rf;
 }
 
 
 int main(void) {
     double v0 = -5;                                         // Startgeschwindigkeit v_t0
+    printf("DICK 0.1 %g\n", cvc_npow(e_positron, 2) / (4*cvc_PI*epsilon_0) / cvc_npow(0.1, 2));
+    printf("DICK 0.01 %g\n", cvc_npow(e_positron, 2) / (4*cvc_PI*epsilon_0) / cvc_npow(0.01, 2));
+    printf("DICK 0.001 %g\n", cvc_npow(e_positron, 2) / (4*cvc_PI*epsilon_0) / cvc_npow(0.001, 2));
+    printf("DICK 1 %g\n", cvc_npow(e_positron, 2) / (4*cvc_PI*epsilon_0) / cvc_npow(0.1, 2));
 
     // Parameter der Newton-Raphson
     double delta = 10e-4;                                   // verwendetes Delta bei der Ableitung der Funktion
@@ -65,5 +69,27 @@ int main(void) {
     fclose(diff_file);
 
     // Berechnung der Trajektorien mit Verlet
+    double t0 = 0;                                          // Startzeit t0
+    double tf = 2;                                          // Endzeit tf
+    double r0 = 10;                                         // Startposition r_t0
+    double rf = 10;                                         // Endposition r_tf
+
+    // Numerische Integration mit Verlet
+    double y_1[2] = {r0, -1.66933e-11};
+    double y_2[2] = {r0, -7.5};
+    double y_3[2] = {r0, -3};
+
+    FILE* pos_file = fopen("data/old_A23_Shooting_Methode_rt.csv", "w");
+    fprintf(pos_file, "Zeit t, r_1(t), r_2(t), r_3(t)\n");
+
+    double t = 0, delta_t = 10e-7;
+    while (t + delta_t < tf) {
+        cvc_verlet_step(t, delta_t, y_1, ODE_Coulomb, 2, NULL);
+        cvc_verlet_step(t, delta_t, y_2, ODE_Coulomb, 2, NULL);
+        cvc_verlet_step(t, delta_t, y_3, ODE_Coulomb, 2, NULL);
+        t += delta_t;
+        fprintf(pos_file, "%g, %g, %g, %g\n", t, y_1[0], y_2[0], y_3[0]);
+    }
+    fclose(pos_file);
     return 0;
 }

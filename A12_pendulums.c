@@ -23,6 +23,7 @@ const double mass = 1;                  // Masse der Pendel [kg]
 
 const double T_max = 20.0;
 const double delta_t = 1e-2; // Zeitliche Schrittweite
+const double smoothing_factor = 10e-10;
 
 static const char pos_file_name[] = "data/A12_position.csv";
 static const char energy_file_name[] = "data/A12_energy.csv";
@@ -106,6 +107,7 @@ int main(void)
     // };
     for (int i = 0; i < N; i++) {
         y[i] = i;
+        y[N+i] = 0;
     }
     y[N] = 20;
 
