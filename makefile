@@ -275,7 +275,7 @@ push_numerics:
 
 # Pull Prüfungsaufgaben
 pull_submissions:
-	cp ../submissions/A07_Fourier_Integration/A07_Fourier_Integral .
+	cp ../submissions/A07_Fourier_Integration/A07_Fourier_Integral.c .
 	chmod a-wx A07_Fourier_Integral.c
 
 	cp ../submissions/A14_Schwingungssensor/A14_Schwingungssensor.c .

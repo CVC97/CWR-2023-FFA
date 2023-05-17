@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "cvc_numerics.h"
+#include "../cvc_numerics.h"
 
 
 // Physikalische Konstanten des Systems
@@ -12,7 +12,7 @@ const double r_0 = 1;                                                           
 const double r_A[2] = {-1, 0};                                                  // Position der Verankerung der linken Feder r_A
 const double r_B[2] = {1, 0};                                                   // Position der Verankerung der rechten Feder r_b
 
-const double smoothing_factor = 1e-14;                                           // Vermeidung von numerischen Fehlern bei Division (durch 0)
+const double smoothing_factor = 1e-12;                                          // Vermeidung von numerischen Fehlern bei Division (durch 0)
 
 
 // (gewöhnliche) Differentialgleichung des Federsystems
@@ -64,7 +64,7 @@ int main(void) {
     double *rk4_zero_crossings = (double*) malloc(sizeof(double));              // Reservierung Speicher für Nulldurchgänge (RK4)
 
     // Ausgabedatei
-    FILE* pos_file = fopen("data/A14_Schwingungssensor_pos.csv", "w"); 
+    FILE* pos_file = fopen("A14_Schwingungssensor_pos.csv", "w"); 
     fprintf(pos_file, "Zeit, x(t) [Euler], y(t) [Euler], x(t) [RK4], y(t) [RK4]\n");
     fprintf(pos_file, "%g, %g, %g, %g, %g\n", t, y_euler[0], y_euler[1], y_rk4[0], y_rk4[1]);
 
@@ -91,25 +91,25 @@ int main(void) {
         if (x_pre_rk4 * x_post_rk4 < 0) {                                       // Prüfen eines Nulldurchganges über Vorzeichenwechsel (RK4)
             rk4_number_zero_crossings++;
             rk4_zero_crossings = (double*) realloc(rk4_zero_crossings, sizeof(double) * rk4_number_zero_crossings);
-            rk4_zero_crossings[rk4_number_zero_crossings - 1] = t;              // // Eintragen des Nulldurchganges in vergrößerten Speicherbereich (RK4) 
+            rk4_zero_crossings[rk4_number_zero_crossings - 1] = t;              // Eintragen des Nulldurchganges in vergrößerten Speicherbereich (RK4) 
 
         }
         fprintf(pos_file, "%g, %g, %g, %g, %g\n", t, y_euler[0], y_euler[1], y_rk4[0], y_rk4[1]);
     }
 
     // Ausgabe der Periodendauer (wenn möglich) 
-    printf("Periodendauer T_x (analytisch): %g\n", T_x);
+    printf("Periodendauer T_x (analytisch): %.14g\n", T_x);
     if (euler_number_zero_crossings < 2) {                                      // Prüfen ob ausreichend Nulldurchgänge (Euler)
         printf("ERROR! Insufficient number of zero-crossings for Euler.");
     } else {                                                                    // Berechnung T_x für ausreichend Nulldurchgänge (Euler)
-        double T_x_Euler = 2.0 / euler_number_zero_crossings * (euler_zero_crossings[euler_number_zero_crossings - 1] - euler_zero_crossings[0]);
-        printf("Periodendauer T_x (Euler): %g\n", T_x_Euler);                   // Printen Periodendauer als 2 * [t(Nulldurchgang N) - t(Nulldurchgang 1)] / N für Nulldurchgänge > 1 (Euler)
+        double T_x_Euler = 2.0 / (euler_number_zero_crossings - 1) * (euler_zero_crossings[euler_number_zero_crossings - 1] - euler_zero_crossings[0]);
+        printf("Periodendauer T_x (Euler): %.14g\n", T_x_Euler);                   // Printen Periodendauer als 2 * [t(Nulldurchgang N) - t(Nulldurchgang 1)] / (N - 1) für Nulldurchgänge > 1 (Euler)
     }
     if (rk4_number_zero_crossings < 2) {                                        // Prüfen ob ausreichend Nulldurchgänge (RK4)
         printf("ERROR! Insufficient number of zero-crossings for RK4.");
     } else {                                                                    // Berechnung T_x für ausreichend Nulldurchgänge (RK4)                           
-        double T_x_RK4 = 2.0 / rk4_number_zero_crossings * (rk4_zero_crossings[rk4_number_zero_crossings - 1] - rk4_zero_crossings[0]);
-        printf("Periodendauer T_x (RK4): %g\n", T_x_RK4);                       // Printen Periodendauer als 2 * [t(Nulldurchgang N) - t(Nulldurchgang 1)] / N für Nulldurchgänge > 1 (RK4)  
+        double T_x_RK4 = 2.0 / (rk4_number_zero_crossings - 1) * (rk4_zero_crossings[rk4_number_zero_crossings - 1] - rk4_zero_crossings[0]);
+        printf("Periodendauer T_x (RK4): %.14g\n", T_x_RK4);                    // Printen Periodendauer als 2 * [t(Nulldurchgang N) - t(Nulldurchgang 1)] / (N - 1) für Nulldurchgänge > 1 (RK4)  
     }
     fclose(pos_file), free(euler_zero_crossings), free(rk4_zero_crossings);
 
@@ -117,7 +117,7 @@ int main(void) {
 // +++++ (Aufgabe 6: Abweichung der numerischen von der analytischen Lösung für variierte Zeitschritte delta_t) +++++
 
     // Ausgabdatei
-    FILE* res_file = fopen("data/A14_Schwingungssensor_res.csv", "w");
+    FILE* res_file = fopen("A14_Schwingungssensor_res.csv", "w");
     fprintf(res_file, "delta_t, Residue Euler, Residue RK4\n"); 
 
     // Itereation über 100 logarithmisch gleichverteilte Zeitschritte delta_t
@@ -149,12 +149,12 @@ int main(void) {
     t = 0, delta_t = 10e-4;
 
     // Initialisierung der Startpositionen der Masse
-    double y1_rk4[4] = {-0.5, 0.1, 0.4};
-    double y2_rk4[4] = {-0.5, 0.2, 0, -0.1};
-    double y3_rk4[4] = {0, -0.3, 1};
+    double y1_rk4[4] = {-0.75, 0.2, 0, -0.2};
+    double y2_rk4[4] = {-0.5, -0.5};
+    double y3_rk4[4] = {0, -0.3, 1, 1};
 
     // Ausgabedatei
-    FILE* fancy_pos_file = fopen("data/A14_Schwingungssensor_fancy_pos.csv", "w"); 
+    FILE* fancy_pos_file = fopen("A14_Schwingungssensor_fancy_pos.csv", "w"); 
     fprintf(fancy_pos_file, "Zeit, x1(t), y1(t), x2(t), y2(t), x3(t), y3(t)\n");
     fprintf(fancy_pos_file, "%g, %g, %g, %g, %g, %g, %g\n", t, y1_rk4[0], y1_rk4[1], y2_rk4[0], y2_rk4[1], y3_rk4[0], y3_rk4[1]);
 
