@@ -13,6 +13,8 @@ struct cvc_tuple_2 {
 };
 
 
+
+
 // Typ gewöhnliche DGL
 typedef int cvc_ode_func(double, const double[], double[], void*);
 typedef int cvc_sde_func(double, const double[], double[], double, void*);
@@ -284,7 +286,7 @@ void cvc_rk4_step(double t, double delta_t, double y[], cvc_ode_func func, int d
     k2 = (double*) calloc(dimension, sizeof(double));
     k3 = (double*) calloc(dimension, sizeof(double));
     k4 = (double*) calloc(dimension, sizeof(double));
-    func(t, y, k1, params);                                       // Berechnung k1 = f(t, y) * dt und support = y + k1/2
+    func(t, y, k1, params);                                     // Berechnung k1 = f(t, y) * dt und support = y + k1/2
     for (int i = 0; i < dimension; i++) {
         k1[i] *= delta_t;
         support[i] = y[i] + k1[i] / 2;
@@ -319,7 +321,7 @@ void cvc_verlet_step(double t, double delta_t, double y[], cvc_ode_func func, in
     for (int i = 0; i < N; i++) {                               // Berechnung (erster Hälfte, Positionen) von y_(i+1) aus a1
         y[i] += a1[i] * delta_t + a1[i+N] * (delta_t * delta_t) /2;
     }
-    func(t+delta_t, y, a2, params);                               // Berechnung von a2 = f(t+delta_t, y_(i+1)) aus Positionen von y_(i+1)
+    func(t+delta_t, y, a2, params);                             // Berechnung von a2 = f(t+delta_t, y_(i+1)) aus Positionen von y_(i+1)
     for (int i = 0; i < N; i++) {                               // Berechnung (zweite Hälfte, Geschwindigkeiten) von y_(i+1) aus a1 und a2
         y[i+N] += (a1[i+N] + a2[i+N]) * delta_t / 2;
     }                                                                                                                 
