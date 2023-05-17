@@ -5,6 +5,13 @@
 #define cvc_PI 3.14159265358979323846
 
 
+// Struktur eines 2er Tupels
+struct cvc_tupel_2 {
+    double x1;
+    double x2;
+};
+
+
 // Typ gewöhnliche DGL
 typedef int cvc_ode_func(double, const double[], double[], void*);
 typedef int cvc_sde_func(double, const double[], double[], double, void*);
