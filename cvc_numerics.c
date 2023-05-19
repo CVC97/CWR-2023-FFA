@@ -13,8 +13,6 @@ struct cvc_tuple_2 {
 };
 
 
-
-
 // Typ gewöhnliche DGL
 typedef int cvc_ode_func(double, const double[], double[], void*);
 typedef int cvc_sde_func(double, const double[], double[], double, void*);
@@ -195,11 +193,11 @@ double cvc_mc_integrate(double func(double*, int), double a[], double b[], int d
         generator = gsl_rng_alloc(gsl_rng_taus2);
         gsl_rng_set(generator, time(NULL));  
     }  
-    double V = 1, *y, density_sum = 0;                              // Gesamtvolumen
+    double V = 1, density_sum = 0;                                  // Gesamtvolumen
     for (int i_dim = 0; i_dim < dim; i_dim++) {
         V *= b[i_dim] - a[i_dim];
     }
-    y = (double*) malloc(sizeof(double) * dim);                     // Erstellung N Zufallsvektoren y[]
+    double *y = (double*) malloc(sizeof(double) * dim);             // Erstellung N Zufallsvektoren y[]
     for (int i = 0; i < N; i++) {
         for (int i_dim = 0; i_dim < dim; i_dim++) {
             *(y + i_dim) = gsl_rng_uniform(generator) * (b[i_dim] - a[i_dim]) + a[i_dim];
@@ -246,8 +244,7 @@ double cvc_mc_integrate_2D(int A(double, double), double a_x, double b_x, double
 
 // numerische Euler Integration des Zustandsarrays y mit gegebenen Parametern
 void cvc_euler_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params) {
-    double *f;
-    f = (double*) calloc(dimension, sizeof(double));            // Reservierung des Ableitungsarrays
+    double *f = (double*) calloc(dimension, sizeof(double));    // Reservierung des Ableitungsarrays
     func(t, y, f, params);                                      // Füllen des Ableitungsarrays über Aufruf der entprechenden ODE
     for (int i = 0; i < dimension; i++) {
         y[i] += f[i] * delta_t;
@@ -259,11 +256,10 @@ void cvc_euler_step(double t, double delta_t, double y[], cvc_ode_func func, int
 
 // numerische Integration mittels Runge-Kutta 2. Ordnung des Zustandsarrays y mit gegebenen Parametern
 void cvc_rk2_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params) {
-    double *support, *k1, *k2;
-    support = (double*) calloc(dimension, sizeof(double));
-    k1 = (double*) calloc(dimension, sizeof(double));
-    k2 = (double*) calloc(dimension, sizeof(double));
-    func(t, y, k1, params);                                     // Berechnung k1 = f(t, y)
+    double *support = (double*) calloc(dimension, sizeof(double));
+    double *k1 = (double*) calloc(dimension, sizeof(double));
+    double *k2 = (double*) calloc(dimension, sizeof(double));
+    double *func(t, y, k1, params);                             // Berechnung k1 = f(t, y)
     for (int i = 0; i < dimension; i++) {
         k1[i] *= delta_t;                                       // Berücksichtigung des Zeitschritts: k1 = f(t, y) * dt
         support[i] = y[i] + k1[i] / 2;                          // support = y + k1/2 (für nächsten Schritt)
@@ -280,12 +276,11 @@ void cvc_rk2_step(double t, double delta_t, double y[], cvc_ode_func func, int d
 
 // numerische Integration mittels Runge-Kutta 2. Ordnung des Zustandsarrays y mit gegebenen Parametern
 void cvc_rk4_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params) {
-    double *support, *k1, *k2, *k3, *k4;
-    support = (double*) malloc(sizeof(double) * dimension);
-    k1 = (double*) calloc(dimension, sizeof(double));
-    k2 = (double*) calloc(dimension, sizeof(double));
-    k3 = (double*) calloc(dimension, sizeof(double));
-    k4 = (double*) calloc(dimension, sizeof(double));
+    double *support = (double*) malloc(sizeof(double) * dimension);
+    double *k1 = (double*) calloc(dimension, sizeof(double));
+    double *k2 = (double*) calloc(dimension, sizeof(double));
+    double *k3 = (double*) calloc(dimension, sizeof(double));
+    double *k4 = (double*) calloc(dimension, sizeof(double));
     func(t, y, k1, params);                                     // Berechnung k1 = f(t, y) * dt und support = y + k1/2
     for (int i = 0; i < dimension; i++) {
         k1[i] *= delta_t;
@@ -314,9 +309,8 @@ void cvc_rk4_step(double t, double delta_t, double y[], cvc_ode_func func, int d
 // numerische Integration
 void cvc_verlet_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params) {
     int N = dimension / 2;
-    double *a1, *a2;
-    a1 = (double*) calloc(dimension, sizeof(double));
-    a2 = (double*) calloc(dimension, sizeof(double));
+    double *a1 = (double*) calloc(dimension, sizeof(double));
+    double *a2 = (double*) calloc(dimension, sizeof(double));
     func(t, y, a1, params);                                     // Berechnung von a1 = f(t, y) * dt
     for (int i = 0; i < N; i++) {                               // Berechnung (erster Hälfte, Positionen) von y_(i+1) aus a1
         y[i] += a1[i] * delta_t + a1[i+N] * (delta_t * delta_t) /2;

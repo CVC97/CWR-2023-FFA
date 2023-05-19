@@ -268,8 +268,8 @@ o_delete:
 
 # Update die Numerik-Bibliotheken im submissions-Folder (+ Schreischutz)
 push_numerics:
-	cp cvc_numerics.c ../submissions/cvc_numerics.c
-	cp cvc_numerics.h ../submissions/cvc_numerics.h
+	sudo cp cvc_numerics.c ../submissions/cvc_numerics.c
+	sudo cp cvc_numerics.h ../submissions/cvc_numerics.h
 	chmod a-w ../submissions/cvc_numerics.c
 	chmod a-w ../submissions/cvc_numerics.c
 
