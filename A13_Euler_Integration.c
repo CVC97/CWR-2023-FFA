@@ -11,7 +11,7 @@ typedef int ode_func(double, const double[], double[], void*);
 
 const int N = 30;                       // Anzahl der Pendel
 const double k = 100;                   // Federhaerte [N/m]
-const double base_length = 0;           // Basislaenge der Federn [m]
+const double base_length = 1;           // Basislaenge der Federn [m]
 const double mass = 1;                  // Masse der Pendel [kg]
 
 /*-------------------------  SIMULATIONS-PARAMETER  ---------------------------*/
@@ -28,13 +28,13 @@ int pendumlumsODE(double t, const double y[], double f[], void *params) {
     }
 
     // Beschleunigungen aus Positionen berechnen
-    f[N] = -k*y[0] / mass;                                      // Position 0 generell
+    f[N] = -k*y[0] / mass;                                              // Position 0 generell
     if (N != 1) {
-        f[N] += k*(y[1] - y[0] - 1);                            // Position 1 auf Position 0 wenn mehr als 1 Pendel
-        f[2*N-1] += -k*(y[N-1] - y[N-2] - 1) / mass;            // Position N - 1 (wenn mehr als 1 Pendel)
+        f[N] += k*(y[1] - y[0] - base_length);                          // Position 1 auf Position 0 wenn mehr als 1 Pendel
+        f[2*N-1] += -k*(y[N-1] - y[N-2] - base_length) / mass;          // Position N - 1 (wenn mehr als 1 Pendel)
     }
-    for (int i = 1; i < N - 1; i++) {                           // Positionen 1 bis N - 2
-        f[N+i] += -k*(y[i] - y[i-1] - 1) / mass + k*(y[i+1] - y[i] - 1) / mass; 
+    for (int i = 1; i < N - 1; i++) {                                   // Positionen 1 bis N - 2
+        f[N+i] += -k*(y[i] - y[i-1] - base_length) / mass + k*(y[i+1] - y[i] - base_length) / mass; 
     }
     return 0;
 }
@@ -53,11 +53,11 @@ double pendulums_energy(const double y[]) {
     // Potentielle Energie
     E_pot += k / 2 * cvc_npow(y[0], 2);  
     if (N != 1) {
-        E_pot += k / 2 * cvc_npow(y[1] - y[0] - 1, 2);
-        E_pot += k / 2 * cvc_npow(y[N-1] - y[N-2] - 1, 2);                                     
+        E_pot += k / 2 * cvc_npow(y[1] - y[0] - base_length, 2);
+        E_pot += k / 2 * cvc_npow(y[N-1] - y[N-2] - base_length, 2);                                     
     }
     for (int i = 1; i < N - 1; i++) {                          
-        E_pot += k / 2 * cvc_npow(y[i] - y[i-1] - 1, 2) + k / 2 * cvc_npow(y[i+1] - y[i] - 1, 2); 
+        E_pot += k / 2 * cvc_npow(y[i] - y[i-1] - base_length, 2) + k / 2 * cvc_npow(y[i+1] - y[i] - base_length, 2); 
     }
     return E_kin + E_pot;
 }
