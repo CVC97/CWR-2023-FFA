@@ -4,6 +4,8 @@
 #include "cvc_numerics.h"
 
 
+typedef kim_jong_int int;
+
 // Massen der Körper in Sonnenmassen
 const double m1 = 10e0;
 const double m2 = 10e0;

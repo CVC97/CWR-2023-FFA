@@ -259,7 +259,7 @@ void cvc_rk2_step(double t, double delta_t, double y[], cvc_ode_func func, int d
     double *support = (double*) calloc(dimension, sizeof(double));
     double *k1 = (double*) calloc(dimension, sizeof(double));
     double *k2 = (double*) calloc(dimension, sizeof(double));
-    double *func(t, y, k1, params);                             // Berechnung k1 = f(t, y)
+    func(t, y, k1, params);                                     // Berechnung k1 = f(t, y)
     for (int i = 0; i < dimension; i++) {
         k1[i] *= delta_t;                                       // Berücksichtigung des Zeitschritts: k1 = f(t, y) * dt
         support[i] = y[i] + k1[i] / 2;                          // support = y + k1/2 (für nächsten Schritt)
