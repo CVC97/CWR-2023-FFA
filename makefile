@@ -178,18 +178,6 @@ cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
 
-# A18
-A18_RK2_Pendel: A18_RK2_Pendel.o cvc_numerics.o
-	gcc A18_RK2_Pendel.o cvc_numerics.o -o A18_RK2_Pendel $(FLAGS)
-	rm *.o
-
-A18_RK2_Pendel.o: A18_RK2_Pendel.c
-	gcc -c A18_RK2_Pendel.c
-
-cvc_numerics.o: cvc_numerics.c
-	gcc -c cvc_numerics.c
-
-
 # (old) A07
 old_A07_Nullstellensuche: old_A07_Nullstellensuche.c
 	gcc old_A07_Nullstellensuche.c -o old_A07_Nullstellensuche $(FLAGS)
@@ -232,6 +220,18 @@ old_A15_2D_MC_Integration: old_A15_2D_MC_Integration.o cvc_numerics.o
 
 old_A15_2D_MC_Integration.o: old_A15_2D_MC_Integration.c
 	gcc -c old_A15_2D_MC_Integration.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+
+# (old) A18
+old_A18_RK2_Pendel: old_A18_RK2_Pendel.o cvc_numerics.o
+	gcc old_A18_RK2_Pendel.o cvc_numerics.o -o old_A18_RK2_Pendel $(FLAGS)
+	rm *.o
+
+old_A18_RK2_Pendel.o: old_A18_RK2_Pendel.c
+	gcc -c old_A18_RK2_Pendel.c
 
 cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c

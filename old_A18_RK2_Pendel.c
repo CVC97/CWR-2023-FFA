@@ -3,6 +3,7 @@
 #include <math.h>
 #include "cvc_numerics.h"
 
+
 typedef int ode_func(double, const double[], double[], void*);
 
 
@@ -46,64 +47,73 @@ double pendulums_energy(const double y[]) {
 
     // Kinetische Energie berechnen
     for (int i = 0; i < N; i++) {
-        E_kin += mass / 2 * npow(y[N+i], 2);
+        E_kin += mass / 2 * cvc_npow(y[N+i], 2);
     }
 
     // Potentielle Energie
-    E_pot += k / 2 * npow(y[0], 2);  
+    E_pot += k / 2 * cvc_npow(y[0], 2);  
     if (N != 1) {
-        E_pot += k / 2 * npow(y[1] - y[0] - 1, 2);
-        E_pot += k / 2 * npow(y[N-1] - y[N-2] - 1, 2);                                     
+        E_pot += k / 2 * cvc_npow(y[1] - y[0], 2);
+        E_pot += k / 2 * cvc_npow(y[N-1] - y[N-2] - 1, 2);                                     
     }
     for (int i = 1; i < N - 1; i++) {                          
-        E_pot += k / 2 * npow(y[i] - y[i-1] - 1, 2) + k / 2 * npow(y[i+1] - y[i] - 1, 2); 
+        E_pot += k / 2 * cvc_npow(y[i] - y[i-1] - 1, 2) + k / 2 * cvc_npow(y[i+1] - y[i] - 1, 2); 
     }
     return E_kin + E_pot;
 }
 
-
+// Kopierte main von A16
 int main(void) {
     int dimension = 2*N;
-    double t = 0;
+    double t = 0, energy;
 
     // Erstellen des Zustandsarrays mit den Startwerten
-    double y[dimension], energy;
+    double y[dimension], y_rk4[dimension];
     for (int i = 0; i < N; i++) {
         y[i] = i;
-        y[N+i] = 0;
+        y_rk4[i] = i;
+    }
+
+    for (int i = N; i < 2*N; i++) {                         // Nullen für die Beschleunigungen
+        y[i] = 0;
+        y_rk4[i] = 0;                   
     }
     y[N] = 20;
+    y_rk4[N] = 20;
 
     // Ausgabe-Dateien
-    FILE* pos_file = fopen("data/A21_Verlet_Integrator.csv", "w");
-    FILE* energy_file = fopen("data/A21_Verlet_Integrator_Energie.csv", "w");
-    fprintf(pos_file, "Zeit t, Pendel");
-    fprintf(energy_file, "Zeit t, Pendel");
+    FILE* pos_file = fopen("data/old_A18_RK2_Integration.csv", "w");
+    FILE* pos_file_rk4 = fopen("data/old_A18_RK4_Integration.csv", "w");
+    FILE* energy_file = fopen("data/old_A18_RK2_Integration_Energie.csv", "w");
+    fprintf(pos_file, "Zeit t");
+    fprintf(pos_file_rk4, "Zeit t");
+    fprintf(energy_file, "Teit t, Energie E\n");
     for (int i = 1; i <= N; i++) {
         fprintf(pos_file, ", P%d", i);
-        fprintf(energy_file, ", P%d", i);
+        fprintf(pos_file_rk4, ", P%d", i);
     }
     fprintf(pos_file, "\n");
-    fprintf(energy_file, "\n");
+    fprintf(pos_file_rk4, "\n");
 
 
     // Durchlaufen der Zeitschritte
     while (t < T_max) {
-        verlet_step(t, delta_t, y, pendumlumsODE, dimension, NULL);     // Aufruf der Integrationsfunktion
+        cvc_rk2_step(t, delta_t, y, pendumlumsODE, dimension, NULL);        // Aufruf der Integrationsfunktion
+        cvc_rk4_step(t, delta_t, y_rk4, pendumlumsODE, dimension, NULL);
         energy = pendulums_energy( (const double*) y);                  // Berechnung der GEsamtenergie des Systems
+        t += delta_t;
 
         // Beschreiben des Datenfiles
         fprintf(pos_file, "%g", t);
-        fprintf(energy_file, "%g, %g\n", t, energy);
+        fprintf(pos_file_rk4, "%g", t);
         for (int i = 0; i < N; i++) {
             fprintf(pos_file, ", %g", y[i]);
+            fprintf(pos_file_rk4, ", %g", y_rk4[i]);
         }
         fprintf(pos_file, "\n"); 
-
-        t += delta_t;
+        fprintf(pos_file_rk4, "\n"); 
+        fprintf(energy_file, "%g, %g\n", t, energy);
     }
-
-    fclose(pos_file);
-    fclose(energy_file);
+    fclose(pos_file), fclose(pos_file_rk4), fclose(energy_file);
     return 0;
 }
