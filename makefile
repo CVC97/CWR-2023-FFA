@@ -178,6 +178,30 @@ cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
 
+# A18
+A18_Magnus_Effekt: A18_Magnus_Effekt.o cvc_numerics.o
+	gcc A18_Magnus_Effekt.o cvc_numerics.o -o A18_Magnus_Effekt $(FLAGS)
+	rm *.o
+
+A18_Magnus_Effekt.o: A18_Magnus_Effekt.c
+	gcc -c A18_Magnus_Effekt.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+
+# A19
+A19_Dichteverteilung_Stern: A19_Dichteverteilung_Stern.o cvc_numerics.o
+	gcc A19_Dichteverteilung_Stern.o cvc_numerics.o -o A19_Dichteverteilung_Stern $(FLAGS)
+	rm *.o
+
+A19_Dichteverteilung_Stern.o: A19_Dichteverteilung_Stern.c
+	gcc -c A19_Dichteverteilung_Stern.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+
 # (old) A07
 old_A07_Nullstellensuche: old_A07_Nullstellensuche.c
 	gcc old_A07_Nullstellensuche.c -o old_A07_Nullstellensuche $(FLAGS)
