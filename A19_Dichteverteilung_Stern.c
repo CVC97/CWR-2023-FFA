@@ -13,6 +13,7 @@ const double G = 6.67384e-11;
 // Chemische Paramater
 const double UNIVERSAL_GAS_CONSTANT = 8.314;
 const double VOLUME_MOL = 22.4e-3;
+const double M_WASSERSTOFF = 1;
 
 
 // Integrationsparameter
@@ -82,15 +83,18 @@ int main(void) {
     double delta_r = 1000;
 
     double pressure = KAPPA * pow(y[0], GAMMA);
-    double temperature = pressure / UNIVERSAL_GAS_CONSTANT * VOLUME_MOL;
+    double volume = 4.0 / 3 * cvc_PI * cvc_npow(r, 2);
+    double temperature = pressure * volume / UNIVERSAL_GAS_CONSTANT;
     fprintf(density_file, "%g, %g, %g, %g, %g\n", r, y[0], y[1], pressure, temperature);
     while (y[0] > 0.1) {
         cvc_rk4_step(r, delta_r, y, PDE_star_density, DIMENSION, NULL);
         r += delta_r;
 
         pressure = KAPPA * pow(y[0], GAMMA);
-        temperature = pressure / UNIVERSAL_GAS_CONSTANT * VOLUME_MOL;     
+        volume = 4.0 / 3 * cvc_PI * cvc_npow(r, 2);
+        temperature = pressure * volume / UNIVERSAL_GAS_CONSTANT;     
         fprintf(density_file, "%g, %g, %g, %g, %g\n", r, y[0], y[1], pressure, temperature);
     }
+    fclose(density_file);
     return 0;
 }
