@@ -299,10 +299,11 @@ push_numerics:
 
 # Pull Prüfungsaufgaben
 pull_submissions:
-	cp ../submissions/A07_Fourier_Integration/A07_Fourier_Integral.c .
+	sudo cp ../submissions/A07_Fourier_Integration/A07_Fourier_Integral.c .
 	chmod a-wx A07_Fourier_Integral.c
 
-	cp ../submissions/A14_Schwingungssensor/A14_Schwingungssensor.c .
+	sudo cp ../submissions/A14_Schwingungssensor/A14_Schwingungssensor.c .
 	chmod a-wx A14_Schwingungssensor.c
 
-
+	sudo cp ../submissions/A20_Eigenwerte_QM_System/A20_Eigenwerte_QM_System.c .
+	chmod a-wx A20_Eigenwerte_QM_System.c

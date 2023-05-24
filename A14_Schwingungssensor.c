@@ -46,7 +46,7 @@ int ODE_dual_springs(double t, const double y[], double f[], void *params) {
 int main(void) {
     // Simulationsparameter
     int dimension = 2 * N;                                                      // Dimensionalität des Zustandsvektors des Systems
-    double T_x = 2 * cvc_PI / sqrt(2*k);                                        // analytische Periodendauer T_x
+    double T_x = 2 * cvc_PI / sqrt(2*k), T_x_Euler = 0, T_x_RK4 = 0;            // Periodendauern T_x
     double x_0 = -0.5;                                                          // Startkoordinate x_0
     double t = 0, delta_t = 1e-4;                                               // Startzeit t = 0, Größe der Zeitschritte delta_t
 
@@ -102,13 +102,14 @@ int main(void) {
     if (euler_number_zero_crossings < 2) {                                      // Prüfen ob ausreichend Nulldurchgänge (Euler)
         printf("ERROR! Insufficient number of zero-crossings for Euler.");
     } else {                                                                    // Berechnung T_x für ausreichend Nulldurchgänge (Euler)
-        double T_x_Euler = 2.0 / (euler_number_zero_crossings - 1) * (euler_zero_crossings[euler_number_zero_crossings - 1] - euler_zero_crossings[0]);
-        printf("Periodendauer T_x (Euler): %.14g\n", T_x_Euler);                   // Printen Periodendauer als 2 * [t(Nulldurchgang N) - t(Nulldurchgang 1)] / (N - 1) für Nulldurchgänge > 1 (Euler)
+        T_x_Euler = 2.0 / (euler_number_zero_crossings - 1) * (euler_zero_crossings[euler_number_zero_crossings - 1] - euler_zero_crossings[0]);
+        printf("Periodendauer T_x (Euler): %.14g\n", T_x_Euler);                // Printen Periodendauer als 2 * [t(Nulldurchgang N) - t(Nulldurchgang 1)] / (N - 1) für Nulldurchgänge > 1 (Euler)
     }
     if (rk4_number_zero_crossings < 2) {                                        // Prüfen ob ausreichend Nulldurchgänge (RK4)
         printf("ERROR! Insufficient number of zero-crossings for RK4.");
+        return 1;
     } else {                                                                    // Berechnung T_x für ausreichend Nulldurchgänge (RK4)                           
-        double T_x_RK4 = 2.0 / (rk4_number_zero_crossings - 1) * (rk4_zero_crossings[rk4_number_zero_crossings - 1] - rk4_zero_crossings[0]);
+        T_x_RK4 = 2.0 / (rk4_number_zero_crossings - 1) * (rk4_zero_crossings[rk4_number_zero_crossings - 1] - rk4_zero_crossings[0]);
         printf("Periodendauer T_x (RK4): %.14g\n", T_x_RK4);                    // Printen Periodendauer als 2 * [t(Nulldurchgang N) - t(Nulldurchgang 1)] / (N - 1) für Nulldurchgänge > 1 (RK4)  
     }
     fclose(pos_file), free(euler_zero_crossings), free(rk4_zero_crossings);
@@ -128,16 +129,16 @@ int main(void) {
         double y_euler_res[4] = {x_0, 0}; 
         double y_rk4_res[4] = {x_0, 0};
 
-        // Integration über 10 Periodendauern T_x
-        while (t + delta_t < 10 * T_x) {
+        // Integration über 10 Periodendauern T_x_RK4
+        while (t + delta_t < 10 * T_x_RK4) {
             t += delta_t;
             cvc_euler_step(t, delta_t, y_euler_res, ODE_dual_springs, dimension, NULL);
             cvc_rk4_step(t, delta_t, y_rk4_res, ODE_dual_springs, dimension, NULL);
         }
         
-        // zusätzlicher Zeitschritt (Differenz zur analytischen T_x) für Vergleichbarkeit mit analytischer Lösung
-        cvc_euler_step(t, 10*T_x - t, y_euler_res, ODE_dual_springs, dimension, NULL);
-        cvc_rk4_step(t, 10*T_x - t, y_rk4_res, ODE_dual_springs, dimension, NULL);
+        // zusätzlicher Zeitschritt (Differenz zur analytischen T_x_RK4) für Vergleichbarkeit mit analytischer Lösung
+        cvc_euler_step(t, 10*T_x_RK4 - t, y_euler_res, ODE_dual_springs, dimension, NULL);
+        cvc_rk4_step(t, 10*T_x_RK4 - t, y_rk4_res, ODE_dual_springs, dimension, NULL);
 
         // Ausgeben der Residuen
         fprintf(res_file, "%g, %g, %g\n", delta_t, fabs(y_euler_res[0] - x_0), fabs(y_rk4_res[0] - x_0));
@@ -158,8 +159,8 @@ int main(void) {
     fprintf(fancy_pos_file, "Zeit, x1(t), y1(t), x2(t), y2(t), x3(t), y3(t)\n");
     fprintf(fancy_pos_file, "%g, %g, %g, %g, %g, %g, %g\n", t, y1_rk4[0], y1_rk4[1], y2_rk4[0], y2_rk4[1], y3_rk4[0], y3_rk4[1]);
 
-    // Integration über 10 Periodendauern T_x
-    while (t <= 10 * T_x) {
+    // Integration über 10 Periodendauern T_x_RK4
+    while (t <= 10 * T_x_RK4) {
         t += delta_t;
         cvc_rk4_step(t, delta_t, y1_rk4, ODE_dual_springs, dimension, NULL);
         cvc_rk4_step(t, delta_t, y2_rk4, ODE_dual_springs, dimension, NULL);
