@@ -41,7 +41,7 @@ double test_energy(double E) {
 
 int main(void) {
 
-// +++++ (Aufgabe 3 -Itierung über Energiewerte im Intervall [0.1, 10]) +++++
+// +++++ (Aufgabe 3: Itierung über Energiewerte im Intervall [0.1, 10]) +++++
 
     double E_start = 0.1;   
     double E_end = 10;
@@ -73,7 +73,7 @@ int main(void) {
     printf("E_1: %.10g\n", E_1);
 
 
-// +++++ (Numerische Berechnung der Wellenfunktionen der Nullpunktsenergien E_0 und E_1 für n = 0 und n = 1) +++++
+// +++++ (Aufgabe 4: Numerische Berechnung der Wellenfunktionen der Nullpunktsenergien E_0 und E_1 für n = 0 und n = 1) +++++
 
     double psi_0[2] = {1, 0};                                                           // Startbedinungen der Integration für Energieeigenwert E_0
     double psi_1[2] = {1, 0};                                                           // Startbedinungen der Integration für Energieeigenwert E_1
