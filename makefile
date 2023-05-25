@@ -227,11 +227,11 @@ cvc_numerics.o: cvc_numerics.c
 
 # (old) A14
 old_A14_Monte_Carlo_Integration: old_A14_Monte_Carlo_Integration.o cvc_numerics.o
-	gcc A14_Monte_Carlo_Integration.o cvc_numerics.o -o old_A14_Monte_Carlo_Integration $(FLAGS)
+	gcc old_A14_Monte_Carlo_Integration.o cvc_numerics.o -o old_A14_Monte_Carlo_Integration $(FLAGS)
 	rm *.o
 
 old_A14_Monte_Carlo_Integration.o: old_A14_Monte_Carlo_Integration.c
-	gcc -c Aold_14_Monte_Carlo_Integration.c
+	gcc -c old_A14_Monte_Carlo_Integration.c
 
 cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c

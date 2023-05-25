@@ -38,20 +38,20 @@ int main(void) {
     double volume_us, volume_rs;
 
     // Unity Sphere (||y|| <= 1)
-    FILE* file_unity_sphere_volume = fopen("data/A14_Volumen_Einheitskugel.csv","w");
+    FILE* file_unity_sphere_volume = fopen("data/old_A14_Volumen_Einheitskugel.csv","w");
     fprintf(file_unity_sphere_volume, "Dimensionen, Volumen\n");
     for (int dim = 1; dim <= 15; dim++) {
-        volume_us = mc_integrate(rho_Sn, a, b, dim, 1e6);
+        volume_us = cvc_mc_integrate(rho_Sn, a, b, dim, 1e5);
         fprintf(file_unity_sphere_volume, "%d, %f\n", dim, volume_us);
         // printf("Volumen Einheitsspäre (%d Dimensionen): %f\n", dim, volume_us);
     }
     fclose(file_unity_sphere_volume);
 
     // Radial Symmetry (0.9 < ||y|| <= 1)
-    FILE* file_radial_symmetry_volume = fopen("data/A14_Volumen_Radialsymmetrie.csv","w");
+    FILE* file_radial_symmetry_volume = fopen("data/old_A14_Volumen_Radialsymmetrie.csv","w");
     fprintf(file_radial_symmetry_volume, "Dimensionen, Volumen\n");
     for (int dim = 1; dim <= 18; dim++) {
-        volume_rs = mc_integrate(rho_Rad, a, b, dim, 1e8);
+        volume_rs = cvc_mc_integrate(rho_Rad, a, b, dim, 1e6);
         fprintf(file_radial_symmetry_volume, "%d, %f\n", dim, volume_rs);
         // printf("Volumen Radialsymmetrie (%d Dimensionen): %f\n", dim, volume_rs);
     }

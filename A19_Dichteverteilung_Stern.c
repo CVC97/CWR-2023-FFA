@@ -46,23 +46,22 @@ double Delta_R(double rho_0) {
         cvc_rk4_step(r, delta_r, y, PDE_star_density, DIMENSION, NULL);
         r += delta_r;
     }
-    printf("r (numerisch): %g\n", r);
-    printf("r (analytisch): %g\n", R_analytical);
+    // printf("r (numerisch): %g\n", r);
+    // printf("r (analytisch): %g\n", R_analytical);
     return fabs(R_analytical - r);
 }
 
 
 int main(void) {
     // Suchen der Nullstelle mit Newton_Raphson
-    double rho_0 = 7e4;                                                                             // Startdichte zur Nullstellensuche
+    double rho_0 = 15000;                                                                           // Startdichte zur Nullstellensuche
     double delta_rho = 1e3;                                                                         // delta_rho der numerischen Differenzierung in der Nullsellensuche
     double rel_tol = 1e-3;                                                                          // Relative Toleranz zum Abbruch
-    double max_iter = 1e4;                                                                          // Maximale Anzahl der Schleifendurchläufe der Nullstellensuche
+    double max_iter = 1e2;                                                                          // Maximale Anzahl der Schleifendurchläufe der Nullstellensuche
 
     double rho_0_numerical = cvc_find_root_newton_raphson(Delta_R, rho_0, delta_rho, rel_tol, max_iter);
     printf("Numerisches rho_0: %g\n", rho_0_numerical);
-
-    printf("Delta_R: %g\n", Delta_R(rho_0));
+    // printf("Delta_R: %g\n", Delta_R(rho_0));
 
 
     // Visuelle Bestimmung der Nullstelle
@@ -75,7 +74,7 @@ int main(void) {
     double R_analytical = 1.2 * R_SUN;                                                              // analytischer Radius des Sterns
 
     // Startbedingung der numerischen Integration
-    double rho_0_correct = 6.7e4;
+    double rho_0_correct = rho_0_numerical;
     double m_0 = 4.0 / 3 * cvc_PI * rho_0 * cvc_npow(EPSILON, 3);                                   // Startmasse m_0 aus rho_0 und EPSILON
     double y[2] = {rho_0_correct, m_0};                                                             // Array mit Ausgangszustand (rho_0, m_0) im (numerischen Zentrum)
 
@@ -84,7 +83,7 @@ int main(void) {
 
     double pressure = KAPPA * pow(y[0], GAMMA);
     double volume = 4.0 / 3 * cvc_PI * cvc_npow(r, 2);
-    double temperature = pressure * volume / UNIVERSAL_GAS_CONSTANT;
+    double temperature = pressure * VOLUME_MOL / UNIVERSAL_GAS_CONSTANT;
     fprintf(density_file, "%g, %g, %g, %g, %g\n", r, y[0], y[1], pressure, temperature);
     while (y[0] > 0.1) {
         cvc_rk4_step(r, delta_r, y, PDE_star_density, DIMENSION, NULL);
@@ -92,7 +91,7 @@ int main(void) {
 
         pressure = KAPPA * pow(y[0], GAMMA);
         volume = 4.0 / 3 * cvc_PI * cvc_npow(r, 2);
-        temperature = pressure * volume / UNIVERSAL_GAS_CONSTANT;     
+        temperature = pressure * VOLUME_MOL / UNIVERSAL_GAS_CONSTANT;     
         fprintf(density_file, "%g, %g, %g, %g, %g\n", r, y[0], y[1], pressure, temperature);
     }
     fclose(density_file);
