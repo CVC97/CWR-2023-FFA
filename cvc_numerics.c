@@ -44,6 +44,16 @@ double cvc_norm_3D(double x, double y, double z) {
 }
 
 
+// Vektor-Produkt (in 3D)
+double *cvc_vector_product(const double a[], const double b[]) {
+    double *target = (double*) malloc(3 * sizeof(double));
+    target[0] = a[1] * b[2] - a[2] * b[1];
+    target[1] = a[2] * b[0] - a[0] * b[2];
+    target[2] = a[0] * b[1] - a[1] * b[0];
+    return target;
+}
+
+
 // numerische Integration (Trapez)
 double cvc_integrate_trapez(double left, double right, int N, double integrand(double)) {
     double sum = 0, interval = (right - left) / N;

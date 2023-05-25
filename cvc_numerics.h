@@ -24,6 +24,9 @@ double cvc_npow(double x, int n);
 double cvc_norm_2D(double x, double y);
 double cvc_norm_3D(double x, double y, double z);
 
+// Vektor-Produkt (in 3D)
+double* cvc_vector_product(const double a[], const double b[]);
+
 
 // Numerical Integration
 double cvc_integrate(double x, int N);
