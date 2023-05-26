@@ -34,7 +34,7 @@ double test_energy(double E) {
         cvc_rk4_step(x0, delta_x, psi, schroedinger_harmonic_ODE, 2, params);
         x0 += delta_x;
     }
-    cvc_rk4_step(x0, x1 - (x0 + delta_x), psi, schroedinger_harmonic_ODE, 2, params);
+    cvc_rk4_step(x0, x1 - x0, psi, schroedinger_harmonic_ODE, 2, params);
     return psi[0] * psi[1];                                                             // Rückgabe: Psi(x1) * Psi-Prime(x1) = 0 wenn E Energieeigenwert von Psi 
 } 
 

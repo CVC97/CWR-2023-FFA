@@ -78,17 +78,14 @@ int main(void) {
         cvc_euler_step(t, delta_t, y_euler, ODE_dual_springs, dimension, NULL);
         cvc_rk4_step(t, delta_t, y_rk4, ODE_dual_springs, dimension, NULL);
 
-        double x_post_euler = y_euler[0];                                       // x-Koordinate nach Integration (Euler) 
-        double x_post_rk4 = y_rk4[0];                                           // x-Koordinate nach Integration (Euler) 
-
         // Bestimmung der Zeiten der Nulldurchgänge
-        if (x_pre_euler * x_post_euler < 0) {                                   // Prüfen eines Nulldurchganges über Vorzeichenwechsel (Euler)         
+        if (x_pre_euler * y_euler[0] < 0 || x_pre_euler == 0) {                 // Prüfen eines Nulldurchganges über Vorzeichenwechsel (Euler)         
             euler_number_zero_crossings++;               
             euler_zero_crossings = (double*) realloc(euler_zero_crossings, sizeof(double) * euler_number_zero_crossings);
             euler_zero_crossings[euler_number_zero_crossings - 1] = t;          // Eintragen des Nulldurchganges in vergrößerten Speicherbereich (Euler)             
 
         }
-        if (x_pre_rk4 * x_post_rk4 < 0) {                                       // Prüfen eines Nulldurchganges über Vorzeichenwechsel (RK4)
+        if (x_pre_rk4 * y_rk4[0] < 0 || x_pre_rk4 == 0) {                       // Prüfen eines Nulldurchganges über Vorzeichenwechsel (RK4)
             rk4_number_zero_crossings++;
             rk4_zero_crossings = (double*) realloc(rk4_zero_crossings, sizeof(double) * rk4_number_zero_crossings);
             rk4_zero_crossings[rk4_number_zero_crossings - 1] = t;              // Eintragen des Nulldurchganges in vergrößerten Speicherbereich (RK4) 
