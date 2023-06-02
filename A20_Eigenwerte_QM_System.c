@@ -81,22 +81,36 @@ int main(void) {
     double params_0[1] = {E_0};                                                         // Übergabearray mit Energieeigenwert E_0
     double params_1[1] = {E_1};                                                         // Übergabearray mit Energieeigenwert E_1
 
+    double N_0 = 0;                                                                     // Normierungsfaktor 1/(N^2) für Psi_0
+    double N_1 = 0;                                                                     // Normierungsfaktor 1/(N^2) für Psi_1
+
     FILE* psi_file = fopen("A20_psi_x.csv", "w");
     fprintf(psi_file, "x, Psi_0(x), Psi_1(x)\n");
 
-    // Numerische Integration von x0 = -1 bis x1 = 0 mit Runke-Kutta-4
+    // Numerische Integration von x0 = -1 bis x1 = 10 mit Runke-Kutta-4
     double x0 = -10;                                                                    // Startwert der Integration
-    double x1 = 0;                                                                      // Endpunkt der Integration
+    double x1 = 10;                                                                     // Endpunkt der Integration
     double delta_x = 1e-3;                                                              // Schrittweite der Integration
     fprintf(psi_file, "%g, %g, %g\n", x0, psi_0[0], psi_1[0]);
     while (x0 + delta_x < x1) {
         cvc_rk4_step(x0, delta_x, psi_0, schroedinger_harmonic_ODE, 2, params_0);
         cvc_rk4_step(x0, delta_x, psi_1, schroedinger_harmonic_ODE, 2, params_1);
+        
+        N_0 += cvc_npow(psi_0[0], 2) * delta_x;         
+        N_1 += cvc_npow(psi_1[0], 2) * delta_x; 
+
         x0 += delta_x;
         fprintf(psi_file, "%g, %g, %g\n", x0, psi_0[0], psi_1[0]);
     }
-    cvc_rk4_step(x0, x1 - (x0 + delta_x), psi_0, schroedinger_harmonic_ODE, 2, params_0);
-    cvc_rk4_step(x0, x1 - (x0 + delta_x), psi_1, schroedinger_harmonic_ODE, 2, params_1);
+    cvc_rk4_step(x0, x1 - x0, psi_0, schroedinger_harmonic_ODE, 2, params_0);
+    cvc_rk4_step(x0, x1 - x0, psi_1, schroedinger_harmonic_ODE, 2, params_1);
+
+    N_0 += cvc_npow(psi_0[0] * (x1 - x0), 2);
+    N_1 += cvc_npow(psi_1[0] * (x1 - x0), 2); 
+
+    // printf("Normierung 0: %g\n", N_0);                                                  // Ausgabe Normierungsfator 1/(N^2) für Psi_0
+    // printf("Normierung 1: %g\n", N_1);                                                  // Ausgabe Normierungsfator 1/(N^2) für Psi_1
+
     fprintf(psi_file, "%g, %g, %g\n", x0, psi_0[0], psi_1[0]);
     fclose(psi_file);
     return 0;
