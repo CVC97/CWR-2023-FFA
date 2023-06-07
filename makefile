@@ -202,6 +202,30 @@ cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
 
+# A21
+A21_Gauss_Seidel: A21_Gauss_Seidel.o cvc_numerics.o
+	gcc A21_Gauss_Seidel.o cvc_numerics.o -o A21_Gauss_Seidel $(FLAGS)
+	rm *.o
+
+A21_Gauss_Seidel.o: A21_Gauss_Seidel.c
+	gcc -c A21_Gauss_Seidel.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+
+# A22
+A22_Waermeleitungsgleichung: A22_Waermeleitungsgleichung.o cvc_numerics.o
+	gcc A22_Waermeleitungsgleichung.o cvc_numerics.o -o A22_Waermeleitungsgleichung $(FLAGS)
+	rm *.o
+
+A22_Waermeleitungsgleichung.o: A22_Waermeleitungsgleichung.c
+	gcc -c A22_Waermeleitungsgleichung.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+
 # (old) A07
 old_A07_Nullstellensuche: old_A07_Nullstellensuche.c
 	gcc old_A07_Nullstellensuche.c -o old_A07_Nullstellensuche $(FLAGS)

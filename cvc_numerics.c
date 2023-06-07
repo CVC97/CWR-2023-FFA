@@ -34,13 +34,21 @@ static double cvc_e_y2(double y) {
 }
 
 
-// Norm in 2 / 3 dimensions
+// Norm in 2 / 3 / N dimensions
 double cvc_norm_2D(double x, double y) {
     return sqrt(cvc_npow(x, 2) + cvc_npow(y, 2));
 }
 
 double cvc_norm_3D(double x, double y, double z) {
     return sqrt(cvc_npow(x, 2) + cvc_npow(y, 2) + cvc_npow(z, 2));
+}
+
+double cvc_norm_ND(double v[], int N) {
+    double sum = 0;
+    for (int v_i = 0; v_i < N; v_i++) {
+        sum += cvc_npow(v[v_i], 2);
+    }
+    return sqrt(sum);
 }
 
 

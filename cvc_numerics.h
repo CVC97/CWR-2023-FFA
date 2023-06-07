@@ -23,6 +23,7 @@ double cvc_npow(double x, int n);
 // Norm in 2 / 3 dimensions
 double cvc_norm_2D(double x, double y);
 double cvc_norm_3D(double x, double y, double z);
+double cvc_norm_ND(double v[], int N);
 
 // Vektor-Produkt (in 3D)
 double* cvc_vector_product(const double a[], const double b[]);
