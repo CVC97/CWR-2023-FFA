@@ -9,13 +9,13 @@ double BOX_X = 1;
 double BOX_Y = 1;
 double V_RAND = 0;
 
-double R_ELECTRODE = 0.1;
 
-double x_LEFT_ELECTRODE = 0.25;
+// Elektroden
+double R_ELECTRODE = 0.1;
+double x_LEFT_ELECTRODE = 0.25;          
 double x_RIGHT_ELECTRODE = 0.75;
 double y_LEFT_ELECTRODE = 0.5;
 double y_RIGHT_ELECTRODE = 0.5;
-
 double V_LEFT_ELECTRODE = -1;
 double V_RIGHT_ELECTRODE = 1;
 
@@ -84,8 +84,10 @@ void PoissonGaussSeidel(int N, struct node F[][N], int iter_max, double toleranc
                         F[n_x][n_y].value = F_new;
                         R_squared += cvc_npow((F_new-F_old) / F_old, 2);                                // neue relative Änderung für innere Werte
                         break;
+
                     case DIRECHLET:
                         break;
+
                     default:
                         break;
                 }
@@ -94,6 +96,7 @@ void PoissonGaussSeidel(int N, struct node F[][N], int iter_max, double toleranc
         count++;
     }
 }
+
 
 int main(void) {
     // Parameter des Gauß-Seidel-Verfahrens
