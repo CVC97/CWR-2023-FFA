@@ -59,7 +59,7 @@ int InsertCircle(int N, double c_x, double c_y, double R, struct node F[][N], do
     double delta_y = BOX_Y / N;
     for (int n_x = 0; n_x < N; n_x++) {
         for (int n_y = 0; n_y < N; n_y++) {
-            if (cvc_norm_2D(delta_x * n_x, delta_y * n_y) < R) {
+            if (cvc_norm_2D(delta_x * n_x - c_x, delta_y * n_y - c_y) < R) {
                 F[n_x][n_y].type = DIRECHLET;
                 F[n_x][n_y].value = val;
             }
@@ -71,17 +71,18 @@ int InsertCircle(int N, double c_x, double c_y, double R, struct node F[][N], do
 
 // Gauß-Seidel-Verfahren für die Poisson-Gleichung
 void PoissonGaussSeidel(int N, struct node F[][N], int iter_max, double tolerance) {
-    int count = 0;                                                                  // Anzahl der Schleifendurchläufe
-    double R_squared = 0;                                                           // quadratische relative Anderung aller Gitterpunkte
+    int count = 0;                                                                                      // Anzahl der Schleifendurchläufe
+    double R_squared = 0;                                                                               // quadratische relative Anderung aller Gitterpunkte
     while (count < iter_max || sqrt(R_squared) > tolerance) {
+        // printf("DICK %d\t", count);
         for (int n_x = 0; n_x < N; n_x++) {
             for (int n_y = 0; n_y < N; n_y++) {   
                 switch (F[n_x][n_y].type) {
                     case INSIDE:
                         double F_old = F[n_x][n_y].value;
-                        double F_new = 1 / 4 * (F[n_x][n_y-1].value + F[n_x][n_y+1].value + F[n_x-1][n_y].value + F[n_x+1][n_y].value);
+                        double F_new = 1.0 / 4 * (F[n_x][n_y-1].value + F[n_x][n_y+1].value + F[n_x-1][n_y].value + F[n_x+1][n_y].value);
                         F[n_x][n_y].value = F_new;
-                        R_squared += cvc_npow((F_new-F_old) / F_old, 2);            // neue relative Änderung für innere Werte
+                        R_squared += cvc_npow((F_new-F_old) / F_old, 2);                                // neue relative Änderung für innere Werte
                         break;
                     case DIRECHLET:
                         break;
@@ -92,23 +93,6 @@ void PoissonGaussSeidel(int N, struct node F[][N], int iter_max, double toleranc
         }
         count++;
     }
-
-    // // Einssetzen des x-Vektors
-    // double *x_vector = (double*) calloc(sizeof(double) * N);
-    // for (int x_i = 0; x_i < N; x_i++) {
-    //     x_vector[x_i] = 1;
-    // }
-
-    // for (int x_i = 0; x_i < N; x_i++) {
-    //     for (L_i = 0; L_i < x_i; L_i++) {
-    //         x_vector[x_i] += F[x_i][L_i] * x_vector[L_i];
-    //     }
-    //     for (R_i = x_i + 1; R_i < N; R_i++) {
-    //         x_vector[x_i] += F[x_i][R_i] * x_vector[R_i];
-    //     }
-    //     x_vector[x_i] = 
-    // }
-    // return;
 }
 
 int main(void) {
@@ -117,15 +101,16 @@ int main(void) {
     int iter_max = 1000;
 
     // Files
-    FILE* field_file = fopen("data/A21_Gauss_Seidel_N32_data.csv", "w");
+    FILE* field_file = fopen("data/A21_Gauss_Seidel_N256_data.csv", "w");
 
-    int N = 32;
+    int N = 256;
     struct node (*F)[N] = malloc(sizeof(struct node[N][N]));                                            // Erstellen des Feldes
-    InitDomain(N, F, 0, 0, 0, 0);                                                                  // Initialisierung des Randes
-    InsertCircle(N, x_LEFT_ELECTRODE, y_LEFT_ELECTRODE, R_ELECTRODE, F, V_LEFT_ELECTRODE);         // Einfügen linke Elektrode
-    InsertCircle(N, x_RIGHT_ELECTRODE, y_RIGHT_ELECTRODE, R_ELECTRODE, F, V_RIGHT_ELECTRODE);      // Einfügen rechte Elektrode
-    PoissonGaussSeidel(N, F, iter_max, tolerance);                                                 // Anwendung des Gauß-Seidel-Verfahrens
+    InitDomain(N, F, 0, 0, 0, 0);                                                                       // Initialisierung des Randes
+    InsertCircle(N, x_LEFT_ELECTRODE, y_LEFT_ELECTRODE, R_ELECTRODE, F, V_LEFT_ELECTRODE);              // Einfügen linke Elektrode
+    InsertCircle(N, x_RIGHT_ELECTRODE, y_RIGHT_ELECTRODE, R_ELECTRODE, F, V_RIGHT_ELECTRODE);           // Einfügen rechte Elektrode
+    PoissonGaussSeidel(N, F, iter_max, tolerance);                                                      // Anwendung des Gauß-Seidel-Verfahrens
 
+    // Beschreiben des Files
     for (int n_x = 0; n_x < N; n_x++) {
         for (int n_y = 0; n_y < N; n_y++) {   
             fprintf(field_file, "%g\n", F[n_x][n_y].value);
@@ -133,13 +118,5 @@ int main(void) {
     }
     fclose(field_file);
     free(F);
-
-
-    // F[1][0].value = 5;
-    // printf("%g\n", F[1][0].value);
-    // for (int N = 32; N <= 256; N *= 2) {                    // Itieren über Gittergrößen N = 32, 64, 128 und 256
-
-    // }
-
     return 0;
 }
