@@ -292,7 +292,7 @@ void cvc_rk2_step(double t, double delta_t, double y[], cvc_ode_func func, int d
 }
 
 
-// numerische Integration mittels Runge-Kutta 2. Ordnung des Zustandsarrays y mit gegebenen Parametern
+// numerische Integration mittels Runge-Kutta 4. Ordnung des Zustandsarrays y mit gegebenen Parametern
 void cvc_rk4_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params) {
     double *support = (double*) malloc(sizeof(double) * dimension);
     double *k1 = (double*) calloc(dimension, sizeof(double));
