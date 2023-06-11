@@ -318,16 +318,19 @@ o_delete:
 push_numerics:
 	sudo cp cvc_numerics.c ../submissions/cvc_numerics.c
 	sudo cp cvc_numerics.h ../submissions/cvc_numerics.h
-	chmod a-w ../submissions/cvc_numerics.c
-	chmod a-w ../submissions/cvc_numerics.h
+	sudo chmod a-w ../submissions/cvc_numerics.c
+	sudo chmod a-w ../submissions/cvc_numerics.h
 
 # Pull Prüfungsaufgaben
 pull_submissions:
 	sudo cp ../submissions/A07_Fourier_Integration/A07_Fourier_Integral.c .
-	chmod a-wx A07_Fourier_Integral.c
+	sudo chmod a-wx A07_Fourier_Integral.c
 
 	sudo cp ../submissions/A14_Schwingungssensor/A14_Schwingungssensor.c .
-	chmod a-wx A14_Schwingungssensor.c
+	sudo chmod a-wx A14_Schwingungssensor.c
 
 	sudo cp ../submissions/A20_Eigenwerte_QM_System/A20_Eigenwerte_QM_System.c .
-	chmod a-wx A20_Eigenwerte_QM_System.c
+	sudo chmod a-wx A20_Eigenwerte_QM_System.c
+
+	sudo cp ../submissions/A23_Diffusionsgleichung/A23_Diffusionsgleichung.c .
+	sudo chmod a-wx A23_Diffusionsgleichung.c
