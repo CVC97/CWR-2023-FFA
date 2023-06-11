@@ -44,18 +44,18 @@ int main(void) {
         x = -2 + i / (99.0 / 4);
         erf_integrated_simpson = cvc_erf_simpson(x, delta_x);
         erf_integrated_midpoint = cvc_erf_midpoint(x, delta_x);
-        fprintf(file_erf_simpson, "%.8f, %.8f, %.8f, %.8f\n", x, erf_integrated_simpson, e_y2(x), erf_integrated_midpoint);
+        fprintf(file_erf_simpson, "%g, %g, %g, %g\n", x, erf_integrated_simpson, e_y2(x), erf_integrated_midpoint);
     }
     fclose(file_erf_simpson);
 
     double I = sinh(1) - sinh(0), cosh_integrated_midpoint, cosh_integrated_simpson;
     FILE* file_cosh_numint = fopen("data/A03_cosh_integrated.csv", "w");
     fprintf(file_erf_simpson, "Intervallbreite delta_x, fabs(I - S), fabs(I - M)\n");
-    for (int exp = 0; exp < 10; exp++) {
+    for (int exp = 0; exp < 15; exp++) {
         delta_x = pow(2, -exp);
         cosh_integrated_midpoint = cosh_midpoint(1, delta_x);
         cosh_integrated_simpson = cosh_simpson(1, delta_x);
-        fprintf(file_cosh_numint, "%.8f, %.8f, %.8f\n", delta_x, fabs(I - cosh_integrated_simpson), fabs(I - cosh_integrated_midpoint));
+        fprintf(file_cosh_numint, "%g, %g, %g\n", delta_x, fabs(I - cosh_integrated_simpson), fabs(I - cosh_integrated_midpoint));
     }
     fclose(file_cosh_numint);
     return 0;

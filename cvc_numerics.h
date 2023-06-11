@@ -4,6 +4,12 @@
 
 #define cvc_PI 3.14159265358979323846
 
+// Zeitparameter
+#define cvc_MINUTE 60
+#define cvc_HOUR 60 * cvc_MINUTE
+#define cvc_DAY 24 * cvc_HOUR
+#define cvc_WEEK 7 * cvc_DAY
+
 
 // Struktur eines 2er Tupels
 struct cvc_tupel_2 {

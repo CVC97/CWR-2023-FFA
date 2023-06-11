@@ -319,7 +319,7 @@ push_numerics:
 	sudo cp cvc_numerics.c ../submissions/cvc_numerics.c
 	sudo cp cvc_numerics.h ../submissions/cvc_numerics.h
 	chmod a-w ../submissions/cvc_numerics.c
-	chmod a-w ../submissions/cvc_numerics.c
+	chmod a-w ../submissions/cvc_numerics.h
 
 # Pull Prüfungsaufgaben
 pull_submissions:

@@ -5,7 +5,7 @@
 
 
 const double L = 1;                                                 // Länge der Domäne
-const double delta_x = 0.01;                                        // Diskretisierung der Domäne
+const double delta_x = 0.0035;                                      // Diskretisierung der Domäne
 const double D = 0.1;                                               // Wärmediffusivität
 const double T_LINKS = 1;                                           // Direchlet-Randbedingung links: T = 1
 const double T_RECHTS = -1;                                         // Direchlet-Randbedingung rechts: T = -1
@@ -41,7 +41,7 @@ int main(void) {
     // Zeitparameter
     double time = 0;
     double time_max = 1;
-    double delta_time = cvc_npow(delta_x, 2) / (2 * D) / 4;         
+    double delta_time = cvc_npow(delta_x, 2) / (2.1 * D);         
     printf("delta_time: %g\n", delta_time);
 
     double *y = (double*) calloc(N, sizeof(double));                // Initialisieren des Temperaturfeldes
@@ -50,7 +50,7 @@ int main(void) {
     FILE* heat_file = fopen("data/A22_Waermeleitungsgleichung_data.csv", "w");
     fprintf(heat_file, "0");
     for (int i = 0; i < N; i++) {
-        fprintf(heat_file, ", %g", i*delta_x);
+        fprintf(heat_file, ", %g", (i+1) * delta_x);
     }
     fprintf(heat_file, "\n%g", time);
     for (int i = 0; i < N; i++) {
