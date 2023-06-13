@@ -226,6 +226,42 @@ cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
 
+# A24
+A24_SOR: A24_SOR.o cvc_numerics.o
+	gcc A24_SOR.o cvc_numerics.o -o A24_SOR $(FLAGS)
+	rm *.o
+
+A24_SOR.o: A24_SOR.c
+	gcc -c A24_SOR.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+
+# A25
+A25_Spektraltests_Zufallsgeneratoren: A25_Spektraltests_Zufallsgeneratoren.o cvc_numerics.o
+	gcc A25_Spektraltests_Zufallsgeneratoren.o cvc_numerics.o -o A25_Spektraltests_Zufallsgeneratoren $(FLAGS)
+	rm *.o
+
+A22_Waermeleitungsgleichung.o: A22_Waermeleitungsgleichung.c
+	gcc -c A22_Waermeleitungsgleichung.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+
+# A26
+A26_Wellenphaenomene: A26_Wellenphaenomene.o cvc_numerics.o
+	gcc A26_Wellenphaenomene.o cvc_numerics.o -o A26_Wellenphaenomene $(FLAGS)
+	rm *.o
+
+A26_Wellenphaenomene.o: A26_Wellenphaenomene.c
+	gcc -c A26_Wellenphaenomene.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+
 # (old) A07
 old_A07_Nullstellensuche: old_A07_Nullstellensuche.c
 	gcc old_A07_Nullstellensuche.c -o old_A07_Nullstellensuche $(FLAGS)

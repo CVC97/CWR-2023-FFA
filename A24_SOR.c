@@ -74,7 +74,7 @@ int InsertCircle(int N, double c_x, double c_y, double R, struct node F[][N], do
 
 
 // Gauß-Seidel-Verfahren für die Poisson-Gleichung
-void PoissonGaussSeidel(int N, struct node F[][N], int iter_max, double tolerance) {
+int PoissonGaussSeidel(int N, struct node F[][N], int iter_max, double tolerance) {
     int count = 0;                                                                                      // Anzahl der Schleifendurchläufe
     double R_squared;                                                                                   // quadratische relative Anderung aller Gitterpunkte
     do {
@@ -96,34 +96,66 @@ void PoissonGaussSeidel(int N, struct node F[][N], int iter_max, double toleranc
                         break;
                 }
             }
-        } 
+        }
         count++;
     } while (count < iter_max && sqrt(R_squared) > tolerance);
+    return count;
+}
+
+
+// SOR-Verfahren für die Poisson-Gleichung
+int PoissonSOR(int N, struct node F[][N], int iter_max, double tolerance, double alpha) {
+    int count = 0;                                                                                      // Anzahl der Schleifendurchläufe
+    double R_squared;                                                                                   // quadratische relative Anderung aller Gitterpunkte
+    do {
+        R_squared = 0; 
+        for (int n_x = 0; n_x < N; n_x++) {
+            for (int n_y = 0; n_y < N; n_y++) {   
+                switch (F[n_x][n_y].type) {
+                    case INSIDE:
+                        double F_old = F[n_x][n_y].value;
+                        double F_new = 1.0 / 4 * (F[n_x][n_y-1].value + F[n_x][n_y+1].value + F[n_x-1][n_y].value + F[n_x+1][n_y].value);
+                        F[n_x][n_y].value = F_old + alpha * (F_new - F_old);
+                        R_squared += cvc_npow((F_new-F_old) / (F_old + SMOOTHING_FACTOR), 2);                                // neue relative Änderung für innere Werte
+                        break;
+
+                    case DIRECHLET:
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+        count++;
+    } while (count < iter_max && sqrt(R_squared) > tolerance);
+    return count;
 }
 
 
 int main(void) {
-    // Parameter des Gauß-Seidel-Verfahrens
-    double tolerance = 1e-3;
-    int iter_max = 1000;
+    // Parameter des SOR-Verfahrens
+    double tolerance = 1e-4;
+    int iter_max = 1e6;
+    int N = 16;
 
-    // Files
-    FILE* field_file = fopen("data/A21_Gauss_Seidel_N256_data.csv", "w");
+    FILE* SOR_convergence_file = fopen("data/A24_SOR_N16_convergence_data.csv", "w");
+    fprintf(SOR_convergence_file, "alpha, iterations till convergence SOR, iterations till convergence Gauss-Seidel\n");
 
-    int N = 256;
-    struct node (*F)[N] = malloc(sizeof(struct node[N][N]));                                            // Erstellen des Feldes
-    InitDomain(N, F, 0, 0, 0, 0);                                                                       // Initialisierung des Randes
-    InsertCircle(N, x_LEFT_ELECTRODE, y_LEFT_ELECTRODE, R_ELECTRODE, F, V_LEFT_ELECTRODE);              // Einfügen linke Elektrode
-    InsertCircle(N, x_RIGHT_ELECTRODE, y_RIGHT_ELECTRODE, R_ELECTRODE, F, V_RIGHT_ELECTRODE);           // Einfügen rechte Elektrode
-    PoissonGaussSeidel(N, F, iter_max, tolerance);                                                      // Anwendung des Gauß-Seidel-Verfahrens
+    struct node (*F_SOR)[N] = malloc(sizeof(struct node[N][N]));                                                    // Erstellen des Feldes
 
-    // Beschreiben des Files
-    for (int n_x = 0; n_x < N; n_x++) {
-        for (int n_y = 0; n_y < N; n_y++) {   
-            fprintf(field_file, "%g\n", F[n_x][n_y].value);
-        }
+
+    // Feld für SOR und Anzahl Iterationen bis Konvergenz
+    for (double alpha = 1; alpha < 2 - 0.01; alpha += 0.025) {
+        InitDomain(N, F_SOR, 0, 0, 0, 0);                                                                           // Initialisierung des Randes
+        InsertCircle(N, x_LEFT_ELECTRODE, y_LEFT_ELECTRODE, R_ELECTRODE, F_SOR, V_LEFT_ELECTRODE);                  // Einfügen linke Elektrode
+        InsertCircle(N, x_RIGHT_ELECTRODE, y_RIGHT_ELECTRODE, R_ELECTRODE, F_SOR, V_RIGHT_ELECTRODE);               // Einfügen rechte Elektrode
+        int n_iterations_SOR = PoissonSOR(N, F_SOR, iter_max, tolerance, alpha);                                    // Anwendung des SOR-Verfahrens
+        printf("N%d\talpha: %g\n", N, alpha);
+        fprintf(SOR_convergence_file, "%g, %d\n", alpha, n_iterations_SOR);                                         // Konvergenz für alpha                  
     }
-    fclose(field_file);
-    free(F);
+
+    // fclose(SOR_convergence_file);
+    free(F_SOR);
     return 0;
 }
