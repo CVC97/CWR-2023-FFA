@@ -108,22 +108,82 @@ int main(void) {
     int iter_max = 1000;
 
     // Files
-    FILE* field_file = fopen("data/A21_Gauss_Seidel_N256_data.csv", "w");
+    FILE* field_32_file = fopen("data/A21_Gauss_Seidel_N32_data.csv", "w");
+    FILE* field_64_file = fopen("data/A21_Gauss_Seidel_N64_data.csv", "w");
+    FILE* field_128_file = fopen("data/A21_Gauss_Seidel_N128_data.csv", "w");
+    FILE* field_256_file = fopen("data/A21_Gauss_Seidel_N256_data.csv", "w");
 
-    int N = 256;
-    struct node (*F)[N] = malloc(sizeof(struct node[N][N]));                                            // Erstellen des Feldes
-    InitDomain(N, F, 0, 0, 0, 0);                                                                       // Initialisierung des Randes
-    InsertCircle(N, x_LEFT_ELECTRODE, y_LEFT_ELECTRODE, R_ELECTRODE, F, V_LEFT_ELECTRODE);              // Einfügen linke Elektrode
-    InsertCircle(N, x_RIGHT_ELECTRODE, y_RIGHT_ELECTRODE, R_ELECTRODE, F, V_RIGHT_ELECTRODE);           // Einfügen rechte Elektrode
-    PoissonGaussSeidel(N, F, iter_max, tolerance);                                                      // Anwendung des Gauß-Seidel-Verfahrens
+    // Göße der Felder
+    int N32 = 32;
+    int N64 = 64;
+    int N128 = 128;
+    int N256 = 256;
 
-    // Beschreiben des Files
-    for (int n_x = 0; n_x < N; n_x++) {
-        for (int n_y = 0; n_y < N; n_y++) {   
-            fprintf(field_file, "%g\n", F[n_x][n_y].value);
+    // Erstellen der Felder
+    struct node (*F32)[N32] = malloc(sizeof(struct node[N32][N32]));
+    struct node (*F64)[N64] = malloc(sizeof(struct node[N64][N64]));
+    struct node (*F128)[N128] = malloc(sizeof(struct node[N128][N128]));
+    struct node (*F256)[N256] = malloc(sizeof(struct node[N256][N256]));
+
+    // Initialisierung der Ränder
+    InitDomain(N32, F32, 0, 0, 0, 0);
+    InitDomain(N64, F64, 0, 0, 0, 0);
+    InitDomain(N128, F128, 0, 0, 0, 0);
+    InitDomain(N256, F256, 0, 0, 0, 0);
+
+    // Hinzufügen der Elektroden
+    InsertCircle(N32, x_LEFT_ELECTRODE, y_LEFT_ELECTRODE, R_ELECTRODE, F32, V_LEFT_ELECTRODE);                      // Einfügen linke Elektrode
+    InsertCircle(N32, x_RIGHT_ELECTRODE, y_RIGHT_ELECTRODE, R_ELECTRODE, F32, V_RIGHT_ELECTRODE);                   // Einfügen rechte Elektrode
+
+    InsertCircle(N64, x_LEFT_ELECTRODE, y_LEFT_ELECTRODE, R_ELECTRODE, F64, V_LEFT_ELECTRODE);                      // Einfügen linke Elektrode
+    InsertCircle(N64, x_RIGHT_ELECTRODE, y_RIGHT_ELECTRODE, R_ELECTRODE, F64, V_RIGHT_ELECTRODE);                   // Einfügen rechte Elektrode
+
+    InsertCircle(N128, x_LEFT_ELECTRODE, y_LEFT_ELECTRODE, R_ELECTRODE, F128, V_LEFT_ELECTRODE);                    // Einfügen linke Elektrode
+    InsertCircle(N128, x_RIGHT_ELECTRODE, y_RIGHT_ELECTRODE, R_ELECTRODE, F128, V_RIGHT_ELECTRODE);                 // Einfügen rechte Elektrode
+
+    InsertCircle(N256, x_LEFT_ELECTRODE, y_LEFT_ELECTRODE, R_ELECTRODE, F256, V_LEFT_ELECTRODE);                    // Einfügen linke Elektrode
+    InsertCircle(N256, x_RIGHT_ELECTRODE, y_RIGHT_ELECTRODE, R_ELECTRODE, F256, V_RIGHT_ELECTRODE);                 // Einfügen rechte Elektrode
+
+    // Anwendung des Gauß-Seidel-Verfahrens
+    printf("F32 calculating...\n");
+    PoissonGaussSeidel(N32, F32, iter_max, tolerance);   
+    printf("F64 calculating...\n");
+    PoissonGaussSeidel(N64, F64, iter_max, tolerance);
+    printf("F128 calculating...\n");
+    PoissonGaussSeidel(N128, F128, iter_max, tolerance);
+    printf("F256 calculating...\n");
+    PoissonGaussSeidel(N256, F256, iter_max, tolerance);                                                   
+
+    // Beschreiben der Files
+    for (int n_x = 0; n_x < N32; n_x++) {
+        for (int n_y = 0; n_y < N32; n_y++) {   
+            fprintf(field_32_file, "%g\n", F32[n_x][n_y].value);
         }
     }
-    fclose(field_file);
-    free(F);
+    for (int n_x = 0; n_x < N64; n_x++) {
+        for (int n_y = 0; n_y < N64; n_y++) {   
+            fprintf(field_64_file, "%g\n", F64[n_x][n_y].value);
+        }
+    }
+    for (int n_x = 0; n_x < N128; n_x++) {
+        for (int n_y = 0; n_y < N128; n_y++) {   
+            fprintf(field_128_file, "%g\n", F128[n_x][n_y].value);
+        }
+    }
+    for (int n_x = 0; n_x < N256; n_x++) {
+        for (int n_y = 0; n_y < N256; n_y++) {   
+            fprintf(field_256_file, "%g\n", F256[n_x][n_y].value);
+        }
+    }
+
+    fclose(field_32_file);
+    fclose(field_64_file);
+    fclose(field_128_file);
+    fclose(field_256_file);
+
+    free(F32);
+    free(F64);
+    free(F128);
+    free(F256);
     return 0;
 }
