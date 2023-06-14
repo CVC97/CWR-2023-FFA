@@ -3,6 +3,7 @@
 
 
 #define cvc_PI 3.14159265358979323846
+#define cvc_EARTH_GRAVITATION 9.81
 
 // Zeitparameter
 #define cvc_MINUTE 60
