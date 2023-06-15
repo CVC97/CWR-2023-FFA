@@ -5,7 +5,7 @@
 
 
 // Parameter der Oszillation
-const double OSZ_A0 = 2;
+const double OSZ_A0 = 5;
 const double OSZ_T = 2000;
 const double OSZ_OMEGA = 2 * cvc_PI / OSZ_T;
 
@@ -93,7 +93,8 @@ int dAlembertFTCS(double t, double y_old[], double y[], struct params_dAlembert 
         double beta_i_plus_squared = cvc_npow(u_i_plus * delta_t / delta_x, 2);
 
         if (beta_i_squared > 1) {
-            printf("DICK\n");
+            printf("ERROR! beta^2 exceeds 1, please adjust delta_t (decrease) and / or delta_x (increase) for valid results.\n");
+            return 1;
         }
 
         double f_east_ghost = 0;                                                                    // rechter Ghost
@@ -139,9 +140,9 @@ int main(void) {
     double t = 0;                                            
 
     FILE* ocean_file = fopen("data/A26_Tsunami_data.csv", "w");
-    fprintf(ocean_file, "0");
+    fprintf(ocean_file, "%g", OCEAN_X_LEFT);
     for (int n_x = 0; n_x < N; n_x++) {
-        fprintf(ocean_file, ", %g", n_x * DELTA_X);
+        fprintf(ocean_file, ", %g", OCEAN_X_LEFT + n_x * DELTA_X);
     }
 
     // Übergabestruktur von den d'Alembert-Integrator

@@ -6,10 +6,16 @@
 #define cvc_PI 3.14159265358979323846
 
 
-// Struktur eines 2er Tupels
-struct cvc_tuple_2 {
+// Struktur von 2er / 3er Tupeln
+struct cvc_tupel_2 {
     double x1;
     double x2;
+};
+
+struct cvc_tupel_3 {
+    double x1;
+    double x2;
+    double x3;
 };
 
 

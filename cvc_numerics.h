@@ -12,10 +12,16 @@
 #define cvc_WEEK 7 * cvc_DAY
 
 
-// Struktur eines 2er Tupels
+// Struktur von 2er / 3er Tupeln
 struct cvc_tupel_2 {
     double x1;
     double x2;
+};
+
+struct cvc_tupel_3 {
+    double x1;
+    double x2;
+    double x3;
 };
 
 
