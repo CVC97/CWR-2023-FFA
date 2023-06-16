@@ -10,13 +10,13 @@ const double sol2_analytical = 1e-8;
 
 
 // Lösung der Mitternachts-Formel
-struct cvc_tupel_2 MiNaFo(double a, double b, double c) {
+struct cvc_tuple_2 MiNaFo(double a, double b, double c) {
     double sol1, sol2;
 
     sol1 = (-b + sqrt(pow(b, 2) - 4*a*c)) / (2*a);
     sol2 = (-b - sqrt(pow(b, 2) - 4*a*c)) / (2*a);
 
-    struct cvc_tupel_2 minafo;
+    struct cvc_tuple_2 minafo;
     minafo.x1 = sol1;
     minafo.x2 = sol2;
     return minafo;
@@ -24,12 +24,12 @@ struct cvc_tupel_2 MiNaFo(double a, double b, double c) {
 
 
 // Lösung der erweiterten Mitternachts-Formel
-struct cvc_tupel_2 MiNaFo_extended(double a, double b, double c) {
+struct cvc_tuple_2 MiNaFo_extended(double a, double b, double c) {
     double sol1, sol2;
     sol1 = (2*c) / (-b - sqrt(pow(b, 2) - 4*a*c));
     sol2 = (2*c) / (-b + sqrt(pow(b, 2) - 4*a*c));
 
-    struct cvc_tupel_2 minafo_extended;
+    struct cvc_tuple_2 minafo_extended;
     minafo_extended.x1 = sol1;
     minafo_extended.x2 = sol2;
     return minafo_extended;
@@ -37,7 +37,7 @@ struct cvc_tupel_2 MiNaFo_extended(double a, double b, double c) {
 
 
 // kombinierte Lösungsmethode quadratischer Gleichungen
-struct cvc_tupel_2 solve_quadratic(double a, double b, double c) {
+struct cvc_tuple_2 solve_quadratic(double a, double b, double c) {
     double sol1, sol2;
 
     if (b > 0) {
@@ -48,7 +48,7 @@ struct cvc_tupel_2 solve_quadratic(double a, double b, double c) {
         sol2 = (2*c) / (-b + sqrt(cvc_npow(b, 2) - 4*a*c));
     }
 
-    struct cvc_tupel_2 quadratic_solution;
+    struct cvc_tuple_2 quadratic_solution;
     quadratic_solution.x1 = sol1;
     quadratic_solution.x2 = sol2;
     return quadratic_solution;
@@ -61,7 +61,7 @@ int main(void) {
     b = - (1e16 + 1) / 1e8;
     c =  1;
     
-    struct cvc_tupel_2 minafo, minafo_extended, quadratic_solution;
+    struct cvc_tuple_2 minafo, minafo_extended, quadratic_solution;
     minafo = MiNaFo(a, b, c);
     minafo_extended = MiNaFo_extended(a, b, c);
     quadratic_solution = solve_quadratic(a, b, c);

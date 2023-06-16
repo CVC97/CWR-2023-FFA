@@ -239,8 +239,8 @@ cvc_numerics.o: cvc_numerics.c
 
 
 # A25
-A25_Spektraltests_Zufallsgeneratoren: A25_Spektraltests_Zufallsgeneratoren.o cvc_numerics.o
-	gcc A25_Spektraltests_Zufallsgeneratoren.o cvc_numerics.o -o A25_Spektraltests_Zufallsgeneratoren $(FLAGS)
+A25_Spektraltests_Zufallsgeneratoren: A25_Spektraltests_Zufallsgeneratoren.o cvc_numerics.o cvc_rng.o
+	gcc A25_Spektraltests_Zufallsgeneratoren.o cvc_numerics.o cvc_rng.o -o A25_Spektraltests_Zufallsgeneratoren $(FLAGS)
 	rm *.o
 
 A22_Waermeleitungsgleichung.o: A22_Waermeleitungsgleichung.c
@@ -248,6 +248,9 @@ A22_Waermeleitungsgleichung.o: A22_Waermeleitungsgleichung.c
 
 cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
+
+cvc_rng.o: cvc_rng.c
+	gcc -c cvc_rng.c
 
 
 # A26
@@ -274,8 +277,8 @@ old_A12_Polarmethode_normalverteilter_Zufallszahlen: old_A12_Polarmethode_normal
 
 
 # (old) A13
-old_A13_Histogramme: old_A13_Histogramme.o cvc_numerics.o
-	gcc old_A13_Histogramme.o cvc_numerics.o -o old_A13_Histogramme $(FLAGS)
+old_A13_Histogramme: old_A13_Histogramme.o cvc_numerics.o cvc_rng.o
+	gcc old_A13_Histogramme.o cvc_numerics.o cvc_rng.o -o old_A13_Histogramme $(FLAGS)
 	rm *.o
 
 old_A13_Histogramme.o: old_A13_Histogramme.c
@@ -284,10 +287,13 @@ old_A13_Histogramme.o: old_A13_Histogramme.c
 cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
+cvc_rng.o: cvc_rng.c
+	gcc -c cvc_rng.c
+
 
 # (old) A14
-old_A14_Monte_Carlo_Integration: old_A14_Monte_Carlo_Integration.o cvc_numerics.o
-	gcc old_A14_Monte_Carlo_Integration.o cvc_numerics.o -o old_A14_Monte_Carlo_Integration $(FLAGS)
+old_A14_Monte_Carlo_Integration: old_A14_Monte_Carlo_Integration.o cvc_numerics.o cvc_rng.o
+	gcc old_A14_Monte_Carlo_Integration.o cvc_numerics.o cvc_rng.o -o old_A14_Monte_Carlo_Integration $(FLAGS)
 	rm *.o
 
 old_A14_Monte_Carlo_Integration.o: old_A14_Monte_Carlo_Integration.c
@@ -296,10 +302,13 @@ old_A14_Monte_Carlo_Integration.o: old_A14_Monte_Carlo_Integration.c
 cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
+cvc_rng.o: cvc_rng.c
+	gcc -c cvc_rng.c
+
 
 # (old) A15
-old_A15_2D_MC_Integration: old_A15_2D_MC_Integration.o cvc_numerics.o
-	gcc old_A15_2D_MC_Integration.o cvc_numerics.o -o old_A15_2D_MC_Integration $(FLAGS)
+old_A15_2D_MC_Integration: old_A15_2D_MC_Integration.o cvc_numerics.o cvc_rng.o
+	gcc old_A15_2D_MC_Integration.o cvc_numerics.o cvc_rng.o -o old_A15_2D_MC_Integration $(FLAGS)
 	rm *.o
 
 old_A15_2D_MC_Integration.o: old_A15_2D_MC_Integration.c
@@ -307,6 +316,10 @@ old_A15_2D_MC_Integration.o: old_A15_2D_MC_Integration.c
 
 cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
+
+cvc_rng.o: cvc_rng.c
+	gcc -c cvc_rng.c
+
 
 
 # (old) A18
@@ -356,6 +369,11 @@ push_numerics:
 	sudo cp cvc_numerics.h ../submissions/cvc_numerics.h
 	sudo chmod a-w ../submissions/cvc_numerics.c
 	sudo chmod a-w ../submissions/cvc_numerics.h
+
+	sudo cp cvc_rng.c ../submissions/cvc_rng.c
+	sudo cp cvc_rng.h ../submissions/cvc_rng.h
+	sudo chmod a-w ../submissions/cvc_rng.c
+	sudo chmod a-w ../submissions/cvc_rng.h
 
 # Pull Prüfungsaufgaben
 pull_submissions:

@@ -4,17 +4,12 @@
 #include <time.h>
 #include <gsl/gsl_histogram.h>
 #include <gsl/gsl_rng.h>
-
-
-// Struktur eines 2er Tupels
-struct tuple_2 {
-    double x1;
-    double x2;
-};
+#include "cvc_numerics.h"
+#include "cvc_rng.h"
 
 
 // Returniert 2 normalverteile Zuvallsgrößen für gegebenen (GSL_RNG) Zufallsgenerator
-struct tuple_2 random_gaussian(gsl_rng* generator) {
+struct cvc_tuple_2 random_gaussian(gsl_rng* generator) {
     // Seed with time applied to given generator
     gsl_rng_set(generator, time(NULL));     
     for (int i = 0; i < 10; i++) {
@@ -32,7 +27,7 @@ struct tuple_2 random_gaussian(gsl_rng* generator) {
     m = sqrt(-2*log(r)/r);
 
     // Tupel mit 2 normalverteilten Zufallszahlen
-    struct tuple_2 random_2;
+    struct cvc_tuple_2 random_2;
     random_2.x1 = u*m;
     random_2.x2 = v*m;
     return random_2;
@@ -42,7 +37,6 @@ struct tuple_2 random_gaussian(gsl_rng* generator) {
 int main(void) {
     // GSL's Taus generator:
     gsl_rng *rng = gsl_rng_alloc(gsl_rng_taus2);
-
     random_gaussian(rng);
     gsl_rng_free(rng);
     return 0;

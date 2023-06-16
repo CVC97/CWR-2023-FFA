@@ -13,12 +13,12 @@
 
 
 // Struktur von 2er / 3er Tupeln
-struct cvc_tupel_2 {
+struct cvc_tuple_2 {
     double x1;
     double x2;
 };
 
-struct cvc_tupel_3 {
+struct cvc_tuple_3 {
     double x1;
     double x2;
     double x3;
@@ -64,17 +64,8 @@ double cvc_find_root_newton_raphson(double func(double), double x0, double delta
 struct cvc_tuple_2 cvc_solve_quadratic(double a, double b, double c);
 
 
-// Tuple of 2 gaussian-distributed random numbers with static random-number-generator: Polarmethode
-struct cvc_tuple_2 cvc_random_gaussian(void);
-
-// MC-Berechnung der Dichte im Hyperquader [ai, bi] mit dim Dimensionen für die Dichtefunktion func()  
-double cvc_mc_integrate(double func(double*, int), double a[], double b[], int dim, int N);
-
 // 2-Dimensional Integration: Midpoint
 double cvc_integrate_midpoint_2D(int A(double, double), double a_x, double b_x, double a_y, double b_y, double delta_x, double f(double, double));
-
-// 2-Dimensional Integration: Monte-Carlo
-double cvc_mc_integrate_2D(int A(double, double), double a_x, double b_x, double a_y, double b_y, int N, double f(double, double));
 
 
 // Numerical Integration using Euler / Runke-Kutta / Verlet methods with state array y and given parameters

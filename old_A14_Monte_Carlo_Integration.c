@@ -4,6 +4,7 @@
 #include <time.h>
 #include <gsl/gsl_rng.h>
 #include "cvc_numerics.h"
+#include "cvc_rng.h"
 
 
 // Unity Sphere density
@@ -37,11 +38,14 @@ int main(void) {
     double b[] = {2, 4, 2, 5, 10, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, -1, -1, -1, -1, -1};
     double volume_us, volume_rs;
 
+    // Wahl des Zufallsgenerators: gsl_rng_mt19937
+    gsl_rng *rng = gsl_rng_alloc(gsl_rng_mt19937);
+
     // Unity Sphere (||y|| <= 1)
     FILE* file_unity_sphere_volume = fopen("data/old_A14_Volumen_Einheitskugel.csv","w");
     fprintf(file_unity_sphere_volume, "Dimensionen, Volumen\n");
     for (int dim = 1; dim <= 15; dim++) {
-        volume_us = cvc_mc_integrate(rho_Sn, a, b, dim, 1e5);
+        volume_us = cvc_mc_integrate(rho_Sn, a, b, dim, 1e5, rng);
         fprintf(file_unity_sphere_volume, "%d, %f\n", dim, volume_us);
         // printf("Volumen Einheitsspäre (%d Dimensionen): %f\n", dim, volume_us);
     }
@@ -51,10 +55,11 @@ int main(void) {
     FILE* file_radial_symmetry_volume = fopen("data/old_A14_Volumen_Radialsymmetrie.csv","w");
     fprintf(file_radial_symmetry_volume, "Dimensionen, Volumen\n");
     for (int dim = 1; dim <= 18; dim++) {
-        volume_rs = cvc_mc_integrate(rho_Rad, a, b, dim, 1e6);
+        volume_rs = cvc_mc_integrate(rho_Rad, a, b, dim, 1e6, rng);
         fprintf(file_radial_symmetry_volume, "%d, %f\n", dim, volume_rs);
         // printf("Volumen Radialsymmetrie (%d Dimensionen): %f\n", dim, volume_rs);
     }
     fclose(file_radial_symmetry_volume);
+    free(rng);
     return 0;
 }

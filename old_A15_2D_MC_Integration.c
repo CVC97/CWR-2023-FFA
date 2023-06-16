@@ -4,6 +4,7 @@
 #include <time.h>
 #include <gsl/gsl_rng.h>
 #include "cvc_numerics.h"
+#include "cvc_rng.h"
 
 
 // zu integrierende Funktion f(x, y)
@@ -43,10 +44,13 @@ int main(void) {
     FILE* file_mc_integration = fopen("data/old_A15_Integration_MC.csv", "w");
     fprintf(file_mc_integration, "N, Integral\n");
 
+    // Wahl des Zufallsgenerators: gsl_rng_mt19937
+    gsl_rng *rng = gsl_rng_alloc(gsl_rng_mt19937);
+
     int N = 10;
     for (int i = 0; i < 6; i++) {
         N *= 10;
-        integral_mc = cvc_mc_integrate_2D(A, x_a, x_b, y_a, y_b, N, f);
+        integral_mc = cvc_mc_integrate_2D(A, x_a, x_b, y_a, y_b, N, f, rng);
         fprintf(file_mc_integration, "%d, %g\n", N, integral_mc);
         printf("Anzahl Stützstellen: %d\n", N);
     }
