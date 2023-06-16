@@ -8,6 +8,7 @@
 !*.ipynb
 
 !/data/data_visualizations.ipynb
+!/data/A25_Spektraltests_Plotting.py
 
 !.gitignore
 !makefile
