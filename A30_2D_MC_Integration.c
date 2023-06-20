@@ -28,7 +28,7 @@ int main(void) {
     double integral_midpoint, integral_mc;
 
     // Midpoint-Integration
-    FILE* file_midpoint_integration = fopen("data/old_A15_Integration_Mittelpunktsregel.csv", "w");
+    FILE* file_midpoint_integration = fopen("data/A30_Integration_Mittelpunktsregel.csv", "w");
     fprintf(file_midpoint_integration, "Delta x, Integral\n");
 
     double delta_x = 0.1;
@@ -41,7 +41,7 @@ int main(void) {
     fclose(file_midpoint_integration);
 
     // MC-Integration
-    FILE* file_mc_integration = fopen("data/old_A15_Integration_MC.csv", "w");
+    FILE* file_mc_integration = fopen("data/A30_Integration_MC.csv", "w");
     fprintf(file_mc_integration, "N, Integral\n");
 
     // Wahl des Zufallsgenerators: gsl_rng_mt19937

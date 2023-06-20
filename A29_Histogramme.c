@@ -29,7 +29,7 @@ int main(void) {
         gsl_histogram_increment(hist_with_gsl, rand2);
     }
 
-    FILE* file_histogram = fopen("data/old_A13_Histogramme.csv","w");
+    FILE* file_histogram = fopen("data/A29_Histogramme.csv","w");
     gsl_histogram_fprintf (file_histogram, hist_with_gsl, "%g", "%g");
     fclose(file_histogram);
     free(rng);

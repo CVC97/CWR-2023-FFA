@@ -265,30 +265,55 @@ cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
 
-# (old) A07
-old_A07_Nullstellensuche: old_A07_Nullstellensuche.c
-	gcc old_A07_Nullstellensuche.c -o old_A07_Nullstellensuche $(FLAGS)
+# A28
+A28_Polarmethode_normalverteilter_Zufallszahlen: A28_Polarmethode_normalverteilter_Zufallszahlen.c cvc_numerics.o cvc_rng.o
+	gcc A28_Polarmethode_normalverteilter_Zufallszahlen.c cvc_numerics.o cvc_rng.o -o A28_Polarmethode_normalverteilter_Zufallszahlen $(FLAGS)
 	rm *.o
 
-
-# (old) A12
-old_A12_Polarmethode_normalverteilter_Zufallszahlen: old_A12_Polarmethode_normalverteilter_Zufallszahlen.c
-	gcc old_A12_Polarmethode_normalverteilter_Zufallszahlen.c -o old_A12_Polarmethode_normalverteilter_Zufallszahlen $(FLAGS)
-
-
-# (old) A13
-old_A13_Histogramme: old_A13_Histogramme.o cvc_numerics.o cvc_rng.o
-	gcc old_A13_Histogramme.o cvc_numerics.o cvc_rng.o -o old_A13_Histogramme $(FLAGS)
-	rm *.o
-
-old_A13_Histogramme.o: old_A13_Histogramme.c
-	gcc -c old_A13_Histogramme.c
+A28_Polarmethode_normalverteilter_Zufallszahlen.o: A28_Polarmethode_normalverteilter_Zufallszahlen.c
+	gcc -c A28_Polarmethode_normalverteilter_Zufallszahlen.c
 
 cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
 cvc_rng.o: cvc_rng.c
 	gcc -c cvc_rng.c
+
+
+# A29
+A29_Histogramme: A29_Histogramme.o cvc_numerics.o cvc_rng.o
+	gcc A29_Histogramme.o cvc_numerics.o cvc_rng.o -o A29_Histogramme $(FLAGS)
+	rm *.o
+
+A29_Histogramme.o: A29_Histogramme.c
+	gcc -c A29_Histogramme.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+cvc_rng.o: cvc_rng.c
+	gcc -c cvc_rng.c
+
+
+# A30
+A30_2D_MC_Integration: A30_2D_MC_Integration.o cvc_numerics.o cvc_rng.o
+	gcc A30_2D_MC_Integration.o cvc_numerics.o cvc_rng.o -o A30_2D_MC_Integration $(FLAGS)
+	rm *.o
+
+A30_2D_MC_Integration.o: A30_2D_MC_Integration.c
+	gcc -c A30_2D_MC_Integration.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+cvc_rng.o: cvc_rng.c
+	gcc -c cvc_rng.c
+
+
+# (old) A07
+old_A07_Nullstellensuche: old_A07_Nullstellensuche.c
+	gcc old_A07_Nullstellensuche.c -o old_A07_Nullstellensuche $(FLAGS)
+	rm *.o
 
 
 # (old) A14
@@ -305,20 +330,6 @@ cvc_numerics.o: cvc_numerics.c
 cvc_rng.o: cvc_rng.c
 	gcc -c cvc_rng.c
 
-
-# (old) A15
-old_A15_2D_MC_Integration: old_A15_2D_MC_Integration.o cvc_numerics.o cvc_rng.o
-	gcc old_A15_2D_MC_Integration.o cvc_numerics.o cvc_rng.o -o old_A15_2D_MC_Integration $(FLAGS)
-	rm *.o
-
-old_A15_2D_MC_Integration.o: old_A15_2D_MC_Integration.c
-	gcc -c old_A15_2D_MC_Integration.c
-
-cvc_numerics.o: cvc_numerics.c
-	gcc -c cvc_numerics.c
-
-cvc_rng.o: cvc_rng.c
-	gcc -c cvc_rng.c
 
 
 
