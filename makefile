@@ -265,6 +265,19 @@ cvc_numerics.o: cvc_numerics.c
 	gcc -c cvc_numerics.c
 
 
+# A27
+A27_QM_Tunneleffekt: A27_QM_Tunneleffekt.o cvc_numerics.o
+	gcc A27_QM_Tunneleffekt.o cvc_numerics.o -o A27_QM_Tunneleffekt $(FLAGS)
+	rm *.o
+
+A27_QM_Tunneleffekt.o: A27_QM_Tunneleffekt.c
+	gcc -c A27_QM_Tunneleffekt.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+
+
 # A28
 A28_Polarmethode_normalverteilter_Zufallszahlen: A28_Polarmethode_normalverteilter_Zufallszahlen.c cvc_numerics.o cvc_rng.o
 	gcc A28_Polarmethode_normalverteilter_Zufallszahlen.c cvc_numerics.o cvc_rng.o -o A28_Polarmethode_normalverteilter_Zufallszahlen $(FLAGS)
