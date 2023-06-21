@@ -97,7 +97,7 @@ int dAlembertFTCS(double t, double y_old[], double y[], struct params_dAlembert 
             return 1;
         }
 
-        double f_east_ghost = 0;                                                                    // rechter Ghost
+        double f_east_ghost = y[N-1];                                                                    // rechter Ghost
         double f_west_ghost;
 
         if (0 <= t && t <= 2*cvc_PI/OSZ_OMEGA) {
@@ -140,7 +140,7 @@ int main(void) {
     double t = 0;                                            
 
     FILE* ocean_file = fopen("data/A26_Tsunami_data.csv", "w");
-    fprintf(ocean_file, "%g", OCEAN_X_LEFT);
+    fprintf(ocean_file, "0");
     for (int n_x = 0; n_x < N; n_x++) {
         fprintf(ocean_file, ", %g", OCEAN_X_LEFT + n_x * DELTA_X);
     }
