@@ -33,6 +33,16 @@ double cvc_npow(double x, int n) {
 }
 
 
+// Fakultät einer natürlichen Zahl N_0
+double cvc_factorial(int n) {
+    int fact = 1;
+    for (int i = 2; i <= n; i++) {
+        fact *= i;
+    }
+    return fact;
+}
+
+
 // e^(-y^2)
 static double cvc_e_y2(double y) {
     return 2 * exp(-cvc_npow(y, 2)) / sqrt(cvc_PI);
