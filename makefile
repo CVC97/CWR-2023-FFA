@@ -412,3 +412,6 @@ pull_submissions:
 
 	sudo cp ../submissions/A23_Diffusionsgleichung/A23_Diffusionsgleichung.c .
 	sudo chmod a-wx A23_Diffusionsgleichung.c
+
+	sudo cp ../submissions/A31_Hochdimensionale_MC_Integration/A31_Hochdimensionale_MC_Integration.c .
+	sudo chmod a-wx A31_Hochdimensionale_MC_Integration.c

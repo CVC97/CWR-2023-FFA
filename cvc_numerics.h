@@ -2,6 +2,7 @@
 #define NUMERICS_H
 
 
+// generelle (Natur-)konstanten
 #define cvc_PI 3.14159265358979323846
 #define cvc_EARTH_GRAVITATION 9.81
 
@@ -70,11 +71,14 @@ struct cvc_tuple_2 cvc_solve_quadratic(double a, double b, double c);
 // 2-Dimensional Integration: Midpoint
 double cvc_integrate_midpoint_2D(int A(double, double), double a_x, double b_x, double a_y, double b_y, double delta_x, double f(double, double));
 
-
 // Numerical Integration using Euler / Runke-Kutta / Verlet methods with state array y and given parameters
 void cvc_euler_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params);
 void cvc_rk2_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params);
 void cvc_rk4_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params);
 void cvc_verlet_step(double t, double delta_t, double y[], cvc_ode_func func, int dimension, void *params);
+
+
+// Lösung eines Linearen Gleichungssystems für gegebene LR-Zerlegung einer Matrix 
+void triangular_solve(double diag[], double lower[], double upper[], double rhs[], double solution[]);
 
 #endif

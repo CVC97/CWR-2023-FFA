@@ -295,3 +295,9 @@ void cvc_verlet_step(double t, double delta_t, double y[], cvc_ode_func func, in
     free(a1), free(a2);
     return;
 }
+
+
+// Lösung eines Linearen Gleichungssystems für gegebene LR-Zerlegung einer Matrix 
+void triangular_solve(double diag[], double lower[], double upper[], double rhs[], double solution[]) {
+    return;
+}
