@@ -46,6 +46,7 @@ int main(void) {
 
     // Wahl des Zufallsgenerators: gsl_rng_mt19937
     gsl_rng *rng = gsl_rng_alloc(gsl_rng_mt19937);
+    gsl_rng_set(rng, time(NULL)); 
 
     int N = 10;
     for (int i = 0; i < 6; i++) {

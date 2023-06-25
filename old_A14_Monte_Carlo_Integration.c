@@ -40,6 +40,7 @@ int main(void) {
 
     // Wahl des Zufallsgenerators: gsl_rng_mt19937
     gsl_rng *rng = gsl_rng_alloc(gsl_rng_mt19937);
+    gsl_rng_set(rng, time(NULL)); 
 
     // Unity Sphere (||y|| <= 1)
     FILE* file_unity_sphere_volume = fopen("data/old_A14_Volumen_Einheitskugel.csv","w");

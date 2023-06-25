@@ -18,6 +18,13 @@ double gaussian_potential(double x, void *params) {
 }
 
 
+// Berechnet Zustand der Wellenfunktion zum nächsten Zeitschritt für
+int quantum_FTCS_step() {
+
+    return 0;
+}
+
+
 int main(void) {
 
     // Parameter des physikalischen Systems

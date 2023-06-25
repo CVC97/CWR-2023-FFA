@@ -7,8 +7,7 @@
 
 
 // Tupel aus 2 normalverteile Zuvallsgrößen für gegebenen (GSL_RNG) Zufallsgenerator: Polarmethode
-struct cvc_tuple_2 cvc_random_gaussian(gsl_rng* generator) {
-    gsl_rng_set(generator, time(NULL));    
+struct cvc_tuple_2 cvc_random_gaussian(gsl_rng* generator) {   
     double u, v, r = 0, m;                                          // Erstellung 2 Zufallszahlen u, v
     while (r > 1 || r == 0){
         u = (gsl_rng_uniform(generator) * 2) - 1;
@@ -35,7 +34,6 @@ double domain_volume(int D, double R[]) {
 
 // 2-Dimensionale Integration: MC
 double cvc_mc_integrate_2D(gsl_rng* generator, int A(double, double), double a_x, double b_x, double a_y, double b_y, int N, double f(double, double)) {
-    gsl_rng_set(generator, time(NULL)); 
     double x, y, sum = 0, R_area = (b_x - a_x) * (b_y - a_y);
     for (int i = 0; i < N; i++) {
         x = gsl_rng_uniform(generator) * (b_x - a_x) + a_x;
@@ -47,8 +45,7 @@ double cvc_mc_integrate_2D(gsl_rng* generator, int A(double, double), double a_x
 
 
 // MC-Berechnung der Dichte im Hyperquader R [xi_min, xi_max] mit D Dimensionen für die Dichtefunktion integrand()  
-double cvc_mc_integrate(gsl_rng* generator, int D, double integrand(int, double*), double R[], int N) {
-    gsl_rng_set(generator, time(NULL));  
+double cvc_mc_integrate(gsl_rng* generator, int D, double integrand(int, double*), double R[], int N) { 
     double total_volume = domain_volume(D, R);                      // Gesamtvolumen
     double density_sum = 0;                                         // Laufvariable der Dichtebestimmung
     double *x = (double*) malloc(sizeof(double) * D);               // Erstellung N Zufallsvektoren x[]

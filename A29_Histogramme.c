@@ -17,6 +17,7 @@ int main(void) {
 
     // Wahl des Zufallsgenerators: gsl_rng_mt19937
     gsl_rng *rng = gsl_rng_alloc(gsl_rng_mt19937);
+    gsl_rng_set(rng, time(NULL)); 
 
     for (int i = 0; i < 5e6; i++) {
         struct cvc_tuple_2 random_tuple_2 = cvc_random_gaussian(rng);

@@ -38,10 +38,12 @@ int main(void) {
 
     // +++++ (Aufgabe 4: Numerische MC-Integration und analytische Lösung des Volumens der Einheitssphäre in 1-7 Dimensionen) +++++
     {
+
+    gsl_rng *rng = gsl_rng_alloc(gsl_rng_mt19937);                                      // Wahl des Zufallsgenerators: gsl_rng_mt19937
+    gsl_rng_set(rng, time(NULL));                                                       // Seeden des Generators
     
     int N = 10e5;                                                                       // Anzahl der Stützstellen für die MC-Integration
     FILE* volume_dim_file = fopen("A31_volume_dimension.csv", "w");                     // Datenfile
-    gsl_rng *rng = gsl_rng_alloc(gsl_rng_mt19937);                                      // Wahl des Zufallsgenerators: gsl_rng_mt19937
 
     // Iteration über Dimensionen 1-7
     for (int dimension = 1; dimension < 8; dimension++) {                               // Anzahl Dimensionen
@@ -71,13 +73,15 @@ int main(void) {
     // +++++ (Aufgabe 5: Differenz der numerische MC-Integration zur analytische Lösung des Volumens der Einheitssphäre in 5 Dimensionen für verschiedene Anzahlen von Stützstellen) +++++
     {
 
+        gsl_rng *rng = gsl_rng_alloc(gsl_rng_mt19937);                                  // Wahl des Zufallsgenerators: gsl_rng_mt19937
+        gsl_rng_set(rng, time(NULL));                                                   // Seeden des Generators
+
         int dimension = 5;                                                              // Anzahl der Dimensionen
         double N_exp_min = 2, N_exp_max = 8;                                            // Laufvariablen der Stützstellen für die MC-Integration
         double analytical_volume = volume_unity_sphere_analytical(dimension, 1);        // Analytisches Ergebnis
 
         FILE* residue_n_file = fopen("A31_residue_n.csv", "w");                         // Datenfile
         fprintf(residue_n_file, "N Stützstellen, Abweichung zum analytischen Ergebnis\n");
-        gsl_rng *rng = gsl_rng_alloc(gsl_rng_mt19937);                                  // Wahl des Zufallsgenerators: gsl_rng_mt19937
 
         // Maße des Hyperquaders [-1, 1] für 5 Dimensionen
         double R[2 * dimension];
@@ -91,7 +95,7 @@ int main(void) {
             printf("calculating residue %d/100...\n", i_exp + 1);
             double N_exp = N_exp_min + (N_exp_max - N_exp_min) * i_exp / 99.0;
             int N = pow(10, N_exp);
-               
+            
             double numerical_volume = cvc_mc_integrate(rng, dimension, density_func, R, N);
             fprintf(residue_n_file, "%d, %g\n", N, fabs(numerical_volume - analytical_volume));
         }
@@ -103,6 +107,9 @@ int main(void) {
     // +++++ (Aufgabe 6: Standardabweichung des Volumens der Einheitssphäre in 5 Dimensionen für verschiedene Anzahlen von Stützstellen und M = 100 Datensätze) +++++
     {
 
+        gsl_rng *rng = gsl_rng_alloc(gsl_rng_mt19937);                                  // Wahl des Zufallsgenerators: gsl_rng_mt19937
+        gsl_rng_set(rng, time(NULL));                                                   // Seeden des Generators
+
         int dimension = 5;                                                              // Anzahl der Dimensionen
         double N_exp_min = 2, N_exp_max = 8;                                            // Laufvariablen der Stützstellen für die MC-Integration
         int M = 100;                                                                    // Anzahl der Datenpunkte pro Stützstellenzahl N
@@ -110,7 +117,6 @@ int main(void) {
 
         FILE* sigma_n_file = fopen("A31_sigma_n.csv", "w");                             // Datenfile
         fprintf(sigma_n_file, "N Stützstellen, Standardabweichung\n");
-        gsl_rng *rng = gsl_rng_alloc(gsl_rng_mt19937);                                  // Wahl des Zufallsgenerators: gsl_rng_mt19937
 
         // Maße des Hyperquaders [-1, 1] für 5 Dimensionen
         double R[2 * dimension];
