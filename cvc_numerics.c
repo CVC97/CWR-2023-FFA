@@ -301,3 +301,9 @@ void cvc_verlet_step(double t, double delta_t, double y[], cvc_ode_func func, in
 void triangular_solve(double diag[], double lower[], double upper[], double rhs[], double solution[]) {
     return;
 }
+
+
+// Euler-Maruyama Integration stochastischer DGLs
+void eulerMaruyamaStep(double t, double delta_t, double y[], cvc_sde_func func, int dimension, void *params) {
+    return;
+}

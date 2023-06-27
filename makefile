@@ -323,6 +323,37 @@ cvc_rng.o: cvc_rng.c
 	gcc -c cvc_rng.c
 
 
+# A32
+A32_Verschnupfter_Bus: A32_Verschnupfter_Bus.o cvc_numerics.o cvc_rng.o
+	gcc A32_Verschnupfter_Bus.o cvc_numerics.o cvc_rng.o -o A32_Verschnupfter_Bus $(FLAGS)
+	rm *.o
+
+A32_Verschnupfter_Bus.o: A32_Verschnupfter_Bus.c
+	gcc -c A32_Verschnupfter_Bus.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+cvc_rng.o: cvc_rng.c
+	gcc -c cvc_rng.c
+
+
+# A33
+A33_Aktien_Ensemble: A33_Aktien_Ensemble.o cvc_numerics.o cvc_rng.o
+	gcc A33_Aktien_Ensemble.o cvc_numerics.o cvc_rng.o -o A33_Aktien_Ensemble $(FLAGS)
+	rm *.o
+
+A33_Aktien_Ensemble.o: A33_Aktien_Ensemble.c
+	gcc -c A33_Aktien_Ensemble.c
+
+cvc_numerics.o: cvc_numerics.c
+	gcc -c cvc_numerics.c
+
+cvc_rng.o: cvc_rng.c
+	gcc -c cvc_rng.c
+
+
+
 # (old) A07
 old_A07_Nullstellensuche: old_A07_Nullstellensuche.c
 	gcc old_A07_Nullstellensuche.c -o old_A07_Nullstellensuche $(FLAGS)
