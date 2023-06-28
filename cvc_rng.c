@@ -6,6 +6,31 @@
 #include "cvc_numerics.h"
 
 
+// Typ stochastische DGL
+typedef int cvc_sde_func(double, const double[], double[], double[], void*);
+
+
+// Statistische Methoden: Mittelwert
+double cvc_mean(double y[], int dimension) {
+    double mean_sum = 0;
+    for (int i = 0; i < dimension; i++) {
+        mean_sum += y[i];
+    }
+    return mean_sum / dimension;
+}
+
+// Statistische Methoden: Standartdabweichung
+double cvc_sigma(double y[], int dimension) {
+    double sigma_sum = 0;
+    double y_mean = cvc_mean(y, dimension);
+    for (int i = 0; i < dimension; i++) {
+        sigma_sum += cvc_npow(y[i] - y_mean, 2);
+    }
+    return sqrt(sigma_sum / dimension);
+}
+
+
+
 // Tupel aus 2 normalverteile Zuvallsgrößen für gegebenen (GSL_RNG) Zufallsgenerator: Polarmethode
 struct cvc_tuple_2 cvc_random_gaussian(gsl_rng* generator) {   
     double u, v, r = 0, m;                                          // Erstellung 2 Zufallszahlen u, v
@@ -57,4 +82,24 @@ double cvc_mc_integrate(gsl_rng* generator, int D, double integrand(int, double*
     }
     free(x);
     return total_volume / N * density_sum;
+}
+
+
+// Euler-Maruyama Integration stochastischer DGLs
+void cvc_eulerMaruyama_step(double t, double delta_t, double y[], cvc_sde_func func, int dimension, void *params) {
+    double *f = (double*) malloc(sizeof(double) * dimension);       
+    double *g = (double*) malloc(sizeof(double) * dimension);
+    func(t, y, f, g, params);                                       // Berechnung f und g-Arrays
+    static gsl_rng* generator = NULL;
+    if (generator == NULL) {
+        generator = gsl_rng_alloc(gsl_rng_mt19937);                 // Wahl des Zufallsgenerators: gsl_rng_mt19937
+        gsl_rng_set(generator, time(NULL));                      
+    }                                                                                
+    for (int i = 0; i < dimension; i++) {
+        struct cvc_tuple_2 rand_gauss_2 = cvc_random_gaussian(generator);
+        double w = rand_gauss_2.x1 * sqrt(delta_t);
+        y[i] += f[i] * delta_t + g[i] * w;
+    }
+    free(f), free(g);
+    return;
 }
