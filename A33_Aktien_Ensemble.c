@@ -23,7 +23,7 @@ int SDE_stock(double t, const double y[], double f[], double g[], void* params) 
             if (i == j) {
                 g[i * N + j] = sigma * y[j];    
             } else {
-                g[i * N + j] = sigma * y[j] * 0.05;
+                g[i * N + j] = sigma * y[j] * 0.025;
             }
         }
     }
