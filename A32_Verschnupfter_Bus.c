@@ -20,10 +20,10 @@ int how_sick_is_the_bus(int bus[], int N) {
 int main(void) {
 
     // Parameter des Systems
-    int N = 40;                                                 // Anzahl der Sitzplätze im Bus N
+    int N = 40000;                                                 // Anzahl der Sitzplätze im Bus N
     int bus_array[N];                                           // Array mit Zuständen der Passagiere
     double sick_0 = 0.2;                                        // Wahrscheinlichkeit sick_0 eines Passagieres krank zu sein bei t = 0
-    double p = 0.35;                                            // Wahrscheinlichkeit einer Spontangenesung p
+    double p = 0.25;                                            // Wahrscheinlichkeit einer Spontangenesung p
     int T_max = 1000;                                           // Anzahl der Zeitschritte T_max
 
     // Wahl des Zufallsgenerators: gsl_rng_mt19937

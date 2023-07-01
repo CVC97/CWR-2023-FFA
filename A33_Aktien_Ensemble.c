@@ -19,7 +19,13 @@ int SDE_stock(double t, const double y[], double f[], double g[], void* params) 
     // Berechnung der f und g-Arrays aus y und den obigen Parametern
     for (int i = 0; i < N; i++) {
         f[i] = mu * y[i];
-        g[i] = sigma * y[i];
+        for (int j = 0; j < N; j++) {
+            if (i == j) {
+                g[i * N + j] = sigma * y[j];    
+            } else {
+                g[i * N + j] = sigma * y[j] * 0.05;
+            }
+        }
     }
     return 0;
 }

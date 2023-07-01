@@ -88,18 +88,25 @@ double cvc_mc_integrate(gsl_rng* generator, int D, double integrand(int, double*
 // Euler-Maruyama Integration stochastischer DGLs
 void cvc_eulerMaruyama_step(double t, double delta_t, double y[], cvc_sde_func func, int dimension, void *params) {
     double *f = (double*) malloc(sizeof(double) * dimension);       
-    double *g = (double*) malloc(sizeof(double) * dimension);
+    double *g = (double*) malloc(sizeof(double) * cvc_npow(dimension, 2));
+    double *w = (double*) malloc(sizeof(double) * dimension); 
     func(t, y, f, g, params);                                       // Berechnung f und g-Arrays
     static gsl_rng* generator = NULL;
     if (generator == NULL) {
         generator = gsl_rng_alloc(gsl_rng_mt19937);                 // Wahl des Zufallsgenerators: gsl_rng_mt19937
         gsl_rng_set(generator, time(NULL));                      
-    }                                                                                
+    }      
     for (int i = 0; i < dimension; i++) {
         struct cvc_tuple_2 rand_gauss_2 = cvc_random_gaussian(generator);
-        double w = rand_gauss_2.x1 * sqrt(delta_t);
-        y[i] += f[i] * delta_t + g[i] * w;
+        w[i] = rand_gauss_2.x1 * sqrt(delta_t);
+    }                                                                       
+    for (int i = 0; i < dimension; i++) {
+        double gw_sum = 0;
+        for (int j = 0; j < dimension; j++) {
+            gw_sum += g[i * dimension + j] * w[j];
+        }
+        y[i] += f[i] * delta_t + gw_sum;
     }
-    free(f), free(g);
+    free(f), free(g), free(w);
     return;
 }
