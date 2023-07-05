@@ -430,15 +430,16 @@ push_numerics:
 	sudo chmod a-w ../submissions/cvc_rng.c
 	sudo chmod a-w ../submissions/cvc_rng.h
 
-	sudo cp cvc_numerics.c ../project/cvc_numerics.c
-	sudo cp cvc_numerics.h ../project/cvc_numerics.h
-	sudo chmod a-w ../project/cvc_numerics.c
-	sudo chmod a-w ../project/cvc_numerics.h
+	sudo cp cvc_numerics.c ../../project/cvc_numerics.c
+	sudo cp cvc_numerics.h ../../project/cvc_numerics.h
+	sudo chmod a-w ../../project/cvc_numerics.c
+	sudo chmod a-w ../../project/cvc_numerics.h
 
-	sudo cp cvc_rng.c ../project/cvc_rng.c
-	sudo cp cvc_rng.h ../project/cvc_rng.h
-	sudo chmod a-w ../project/cvc_rng.c
-	sudo chmod a-w ../project/cvc_rng.h
+	sudo cp cvc_rng.c ../../project/cvc_rng.c
+	sudo cp cvc_rng.h ../../project/cvc_rng.h
+	sudo chmod a-w ../../project/cvc_rng.c
+	sudo chmod a-w ../../project/cvc_rng.h
+
 
 # Pull Prüfungsaufgaben
 pull_submissions:
