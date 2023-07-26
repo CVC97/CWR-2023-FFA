@@ -130,22 +130,15 @@ int main(void) {
             printf("calculating sigma %d/100...\n", i_exp + 1);
             double N_exp = N_exp_min + (N_exp_max - N_exp_min) * i_exp / 99.0;
             int N = pow(10, N_exp);
-            double volume_sum = 0;
 
             // Erzeugung M = 100 Datenpunkte pro N
             for (int i_M = 0; i_M < M; i_M++) {
-                double numerical_volume = cvc_mc_integrate(rng, dimension, density_func, R, N / M);
-                volume_sum += numerical_volume;
-                volume_array[i_M] = numerical_volume;
+                volume_array[i_M] = cvc_mc_integrate(rng, dimension, density_func, R, N / M);
             }
 
             // Berechnung der Standardabweichung mit den M = 100 Arrayeinträgen
-            double volume_mean = volume_sum / M;                                        // Mittelwert der 100 Datenpunkte
-            double sigma_square_sum = 0;                                                // Berechnung der Standardabweichung
-            for (int i_M = 0; i_M < M; i_M++) {                                         // Erzeugung M = 100 Datensätze
-                sigma_square_sum += cvc_npow(volume_array[i_M] - volume_mean, 2);
-            }
-            fprintf(sigma_n_file, "%d, %g\n", N, sqrt(sigma_square_sum / M));
+            double sigma_volume = cvc_sigma(volume_array, M);                           // Berechnung der Standardabweichung
+            fprintf(sigma_n_file, "%d, %g\n", N, sqrt(sigma_volume));
         }
         fclose(sigma_n_file);
         free(rng);
