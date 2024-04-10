@@ -64,6 +64,14 @@ int ThreeBody_ODE(double t, const double y[], double f[], void *params) {
 }
 
 
+double ThreeBody_Energy(const double y[]):
+    double E_kin, E_pot;
+
+    // calculate kinetic energy
+    
+    return E_kin + E_pot;
+
+
 int main(void) {
     int dimension = 18;
 
@@ -81,7 +89,17 @@ int main(void) {
     double y_3D[18] = {
         -10, 0, 0,                      // Position m1
         10, 0, 0,                       // Position m2
-        0, sqrt(30), 0.001,             // Position m3
+        0, sqrt(30), 0,                 // Position m3
+
+        1, 0.1, 0,                      // Geschwindigkeit m1
+        -1, 0, 0,                       // Geschwindigkeit m2
+        0.5, 0, 0                       // Geschwindigkeit m3
+    };
+
+    double y_3D_euler[18] = {
+        -10, 0, 0,                      // Position m1
+        10, 0, 0,                       // Position m2
+        0, sqrt(30), 0,                 // Position m3
 
         1, 0.1, 0,                      // Geschwindigkeit m1
         -1, 0, 0,                       // Geschwindigkeit m2
@@ -91,31 +109,41 @@ int main(void) {
     // Integration mit Velocity-Verlet
     FILE* pos_file_2D = fopen("data/A17_ThreeBody_2D.csv", "w");
     FILE* pos_file_3D = fopen("data/A17_ThreeBody_3D.csv", "w");
+    FILE* pos_file_3D_euler = fopen("data/A17_ThreeBody_3D_euler.csv", "w");
     fprintf(pos_file_2D, "t, x1, y1, z1, x2, y2, z2, x3, y3, z3\n");
     fprintf(pos_file_3D, "t, x1, y1, z1, x2, y2, z2, x3, y3, z3\n");
+    fprintf(pos_file_3D_euler, "t, x1, y1, z1, x2, y2, z2, x3, y3, z3\n");
 
     double t = 0;
     fprintf(pos_file_2D, "%g", t);
     fprintf(pos_file_3D, "%g", t);
+    fprintf(pos_file_3D_euler, "%g", t);
     for (int i = 0; i < 9; i++) {
         fprintf(pos_file_2D, ", %g", y_2D[i]);
         fprintf(pos_file_3D, ", %g", y_3D[i]);
+        fprintf(pos_file_3D_euler, ", %g", y_3D[i]);
     }
     fprintf(pos_file_2D, "\n");
     fprintf(pos_file_3D, "\n");
+    fprintf(pos_file_3D_euler, "\n");
     while (t < T_max) {
         cvc_verlet_step(t, delta_t, y_2D, ThreeBody_ODE, dimension, NULL);
         cvc_verlet_step(t, delta_t, y_3D, ThreeBody_ODE, dimension, NULL);
+        cvc_euler_step(t, delta_t, y_3D_euler, ThreeBody_ODE, dimension, NULL);
         t += delta_t;
         fprintf(pos_file_2D, "%g", t);
         fprintf(pos_file_3D, "%g", t);
+        fprintf(pos_file_3D_euler, "%g", t);
         for (int i = 0; i < 9; i++) {
             fprintf(pos_file_2D, ", %g", y_2D[i]);
             fprintf(pos_file_3D, ", %g", y_3D[i]);
+            fprintf(pos_file_3D_euler, ", %g", y_3D_euler[i]);
         }
         fprintf(pos_file_2D, "\n");
         fprintf(pos_file_3D, "\n");
+        fprintf(pos_file_3D_euler, "\n");
     }
     fclose(pos_file_2D);
     fclose(pos_file_3D);
+    fclose(pos_file_3D_euler);
 }
